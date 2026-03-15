@@ -20,7 +20,7 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<Omit<User, 'password'>> {
-    const user = this.usersService.findOne(email);
+    const user = await this.usersService.findOne(email);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }

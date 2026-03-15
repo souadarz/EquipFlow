@@ -15,7 +15,11 @@ export class User {
   @Prop()
   fullname!: string;
 
-  @Prop()
+  @Prop({
+    type: String,
+    enum: Role,
+    default: Role.USER,
+  })
   role!: Role;
 }
 
