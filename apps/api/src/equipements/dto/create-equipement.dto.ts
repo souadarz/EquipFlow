@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { EquipementStatus } from '@equipflow/types';
+import { EquipementStatus } from '@repo/shared';
 
 export class CreateEquipementDto {
   @IsNotEmpty()

@@ -1,1 +1,1 @@
-export * from './types/enums/role.enum';
+export * from './types/enums';

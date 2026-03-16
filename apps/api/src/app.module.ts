@@ -5,7 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
-import { EquipementModule } from './equipement/equipement.module';
+import { EquipementModule } from './equipements/equipement.module';
+import { CategoryModule } from './categories/category.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { EquipementModule } from './equipement/equipement.module';
     UsersModule,
     AuthModule,
     EquipementModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

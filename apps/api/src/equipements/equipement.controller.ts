@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { EquipementService } from './equipement.service';
 import { CreateEquipementDto } from './dto/create-equipement.dto';
@@ -16,6 +17,7 @@ import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/common/guards/role.guard';
 import { Roles } from 'src/common/decorators/role.decorator';
 import { Role } from '@repo/shared';
+import { QueryEquipementDto } from './dto/QueryEquipementDto';
 
 @Controller('equipement')
 @UseGuards(JwtAuthGuard)
@@ -30,8 +32,8 @@ export class EquipementController {
   }
 
   @Get()
-  findAll() {
-    return this.equipementService.findAll();
+  findAll(@Query() query: QueryEquipementDto) {
+    return this.equipementService.findAll(query);
   }
 
   @Get(':id')
