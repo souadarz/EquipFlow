@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { EquipementModule } from './equipements/equipement.module';
 import { CategoryModule } from './categories/category.module';
 import { ReservationModule } from './reservations/reservation.module';
+import { MaintenanceModule } from './maintenances/maintenance.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ReservationModule } from './reservations/reservation.module';
     EquipementModule,
     CategoryModule,
     ReservationModule,
+    MaintenanceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

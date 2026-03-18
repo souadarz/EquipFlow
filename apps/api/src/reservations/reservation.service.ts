@@ -102,14 +102,13 @@ export class ReservationService {
 
     const filter: any = {};
 
-    // rôle
+    // role
     if (currentUser.role === Role.USER) {
       filter.user = currentUser.id;
     } else if (user) {
       filter.user = new Types.ObjectId(user);
     }
 
-    // filtres simples
     if (status) filter.status = status;
     if (equipement) filter.equipement = new Types.ObjectId(equipement);
 
