@@ -201,6 +201,10 @@ importers:
         version: 5.9.2
 
   packages/shared:
+    dependencies:
+      mongoose:
+        specifier: ^9.3.0
+        version: 9.3.0
     devDependencies:
       '@repo/typescript-config':
         specifier: workspace:*

@@ -14,7 +14,7 @@ import {
   Equipement,
   EquipementDocument,
 } from 'src/equipements/schemas/equipement.schema';
-import { EquipementStatus, ReservationStatus, Role } from '@repo/shared';
+import { AuthUser, EquipementStatus, ReservationStatus, Role } from '@repo/shared';
 import { QueryReservationDto } from './dto/query-reservetion.dto';
 
 @Injectable()
@@ -28,8 +28,9 @@ export class ReservationService {
   ) { }
   async create(
     createReservationDto: CreateReservationDto,
-    userId: Types.ObjectId,
+    userId: string,
   ): Promise<Reservation> {
+    const userObjectId = new Types.ObjectId(userId);
     const startDate = new Date(createReservationDto.startDate);
     const endDate = new Date(createReservationDto.endDate);
 
@@ -78,7 +79,7 @@ export class ReservationService {
     // creation
     const reservation = await this.reservationModel.create({
       equipement: new Types.ObjectId(createReservationDto.equipement),
-      user: userId,
+      user: userObjectId,
       startDate,
       endDate,
       status: ReservationStatus.ACTIVE,
@@ -96,7 +97,7 @@ export class ReservationService {
 
   async findAll(
     query: QueryReservationDto,
-    currentUser: { id: Types.ObjectId; role: Role },
+    currentUser: AuthUser,
   ) {
     const { status, equipement, user, from, to, page = 1, limit = 20 } = query;
 
@@ -145,7 +146,7 @@ export class ReservationService {
 
   async findOne(
     id: Types.ObjectId,
-    currentUser: { id: Types.ObjectId; role: Role },
+    currentUser: AuthUser,
   ): Promise<Reservation> {
     const reservation = await this.reservationModel
       .findById(id)
@@ -164,10 +165,64 @@ export class ReservationService {
     return reservation;
   }
 
-  update(id: number, updateReservationDto: UpdateReservationDto) {
-    return `This action updates a #${id} reservation`;
+  // update reservation
+  async update(
+    id: Types.ObjectId,
+    updateReservationDto: UpdateReservationDto,
+    currentUser: AuthUser,
+  ): Promise<Reservation> {
+    const reservation = await this.reservationModel.findById(id).lean();
+
+    if (!reservation) {
+      throw new NotFoundException(`Réservation introuvable`);
+    }
+
+    // Seul le propriétaire ou un admin peut modifier
+    this.assertOwnerOrAdmin(reservation.user, currentUser);
+
+    // Un user ne peut qu'annuler sa réservation
+    if (
+      currentUser.role === Role.USER &&
+      updateReservationDto.status !== ReservationStatus.ANNULE
+    ) {
+      throw new ForbiddenException(
+        'Vous pouvez uniquement annuler votre réservation.',
+      );
+    }
+
+    const CLOSED_STATUSES = [
+      ReservationStatus.ANNULE,
+      ReservationStatus.COMPLETE,
+    ];
+    if (CLOSED_STATUSES.includes(reservation.status)) {
+      throw new ConflictException(
+        `Impossible de modifier une réservation "${reservation.status}".`,
+        
+      );
+    }
+
+    const updated = await this.reservationModel
+      .findByIdAndUpdate(id, { status: updateReservationDto.status }, { new: true })
+      .populate('equipement', 'name status')
+      .populate('user', 'fullname email')
+      .lean()
+      .exec();
+
+      if(!updated){
+        throw new NotFoundException("reservation non trouvée")
+      }
+
+    if (updateReservationDto.status && CLOSED_STATUSES.includes(updateReservationDto.status)) {
+      await this.equipementModel.findByIdAndUpdate(
+        reservation.equipement,
+        { status: EquipementStatus.DISPONIBLE },
+      );
+    }
+
+    return updated;
   }
 
+  // delete reservation
   async remove(id: Types.ObjectId): Promise<void> {
     const reservation = await this.reservationModel.findById(id).lean();
 
@@ -175,7 +230,7 @@ export class ReservationService {
       throw new NotFoundException('Réservation introuvable');
     }
 
-    // verification du status du reservation (annulée ou complétée) avant supprimer
+    // verification du status du reservation (annulée ou complétée) avant supprimer 
     const DELETABLE = [ReservationStatus.ANNULE, ReservationStatus.COMPLETE];
     if (!DELETABLE.includes(reservation.status)) {
       throw new ConflictException(
@@ -188,7 +243,7 @@ export class ReservationService {
 
   private assertOwnerOrAdmin(
     ownerId: Types.ObjectId,
-    currentUser: { id: Types.ObjectId; role: Role },
+    currentUser: AuthUser,
   ): void {
     const isOwner = ownerId.toString() === currentUser.id.toString();
     const isAdmin = currentUser.role === Role.ADMIN;

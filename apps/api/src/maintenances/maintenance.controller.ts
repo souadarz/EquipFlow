@@ -33,8 +33,8 @@ export class MaintenanceController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMaintenanceDto: UpdateMaintenanceDto) {
-    return this.maintenanceService.update(+id, updateMaintenanceDto);
+  update(@Param('id') id: Types.ObjectId, @Body() updateMaintenanceDto: UpdateMaintenanceDto) {
+    return this.maintenanceService.update(id, updateMaintenanceDto);
   }
 
   @Patch(':id')

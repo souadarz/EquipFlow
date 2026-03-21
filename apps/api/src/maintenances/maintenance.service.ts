@@ -87,8 +87,8 @@ export class MaintenanceService {
     return maintenance;
   }
 
-  update(id: number, updateMaintenanceDto: UpdateMaintenanceDto) {
-    return `This action updates a #${id} maintenance`;
+  update(id: Types.ObjectId, updateMaintenanceDto: UpdateMaintenanceDto) {
+    return 'This action updates a maintenance';
   }
 
 // close maintenance
@@ -124,6 +124,10 @@ export class MaintenanceService {
       .populate('equipement', 'name')
       .lean()
       .exec();
+
+      if(!updated){
+        throw new NotFoundException("maintenance non trouvée")
+      }
 
     // Remettre l'équipement disponible
     await this.equipementModel.findByIdAndUpdate(

@@ -18,5 +18,8 @@
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "typescript": "^5"
+  },
+  "dependencies": {
+    "mongoose": "^9.3.0"
   }
 }
