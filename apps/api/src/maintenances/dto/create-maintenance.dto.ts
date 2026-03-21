@@ -10,9 +10,9 @@ export class CreateMaintenanceDto {
   @IsDateString()
   startDate!: string;
 
-  @IsOptional()
-  @IsDateString()
-  endDate?: string;
+  // @IsOptional()
+  // @IsDateString()
+  // endDate?: string;
 
   @IsOptional()
   @IsString()

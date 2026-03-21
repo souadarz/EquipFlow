@@ -1,9 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { MaintenanceService } from './maintenance.service';
 import { CreateMaintenanceDto } from './dto/create-maintenance.dto';
 import { UpdateMaintenanceDto } from './dto/update-maintenance.dto';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { Roles } from 'src/common/decorators/role.decorator';
+import { Role } from '@repo/shared';
+import { ParseObjectIdPipe } from '@nestjs/mongoose';
+import { Types } from 'mongoose';
+import { CloseMaintenanceDto } from './dto/close-maintenance.dto';
 
 @Controller('maintenance')
+@UseGuards(JwtAuthGuard)
+@Roles(Role.ADMIN)
+
+
 export class MaintenanceController {
   constructor(private readonly maintenanceService: MaintenanceService) {}
 
@@ -18,8 +28,8 @@ export class MaintenanceController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.maintenanceService.findOne(+id);
+  findOne(@Param('id', ParseObjectIdPipe) id: Types.ObjectId) {
+    return this.maintenanceService.findOne(id);
   }
 
   @Patch(':id')
@@ -27,8 +37,13 @@ export class MaintenanceController {
     return this.maintenanceService.update(+id, updateMaintenanceDto);
   }
 
+  @Patch(':id')
+  close(@Param('id', ParseObjectIdPipe) id: Types.ObjectId, @Body() closeMaintenanceDto: CloseMaintenanceDto) {
+    return this.maintenanceService.update(id, closeMaintenanceDto);
+  }
+  
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.maintenanceService.remove(+id);
+  remove(@Param('id', ParseObjectIdPipe) id: Types.ObjectId) {
+    return this.maintenanceService.remove(id);
   }
 }
