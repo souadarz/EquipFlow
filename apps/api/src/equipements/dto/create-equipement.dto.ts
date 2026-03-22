@@ -20,6 +20,10 @@ export class CreateEquipementDto {
   @IsEnum(EquipementStatus)
   status?: EquipementStatus;
 
+  @IsString()
+  @IsNotEmpty()
+  serialNumber!: string;
+
   @IsMongoId()
   category!: string;
 }

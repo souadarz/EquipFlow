@@ -5,9 +5,9 @@ export enum Role {
 
 export enum EquipementStatus {
   DISPONIBLE      = 'disponible',
-  RESERVE         = 'reserve',
-  EN_MAINTENANCE  = 'en_maintenance',
-  HORS_SERVICE    = 'hors_service',
+  RESERVE         = 'réservé',
+  EN_MAINTENANCE  = 'en maintenance',
+  HORS_SERVICE    = 'hors service',
 }
 
 export enum ReservationStatus {

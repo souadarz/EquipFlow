@@ -48,7 +48,7 @@ export class EquipementController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() updateEquipementDto: UpdateEquipementDto,
   ) {
-    return this.equipementService.update(+id, updateEquipementDto);
+    return this.equipementService.update(id, updateEquipementDto);
   }
 
   @Delete(':id')

@@ -20,6 +20,9 @@ export class Equipement {
   })
   status!: EquipementStatus;
 
+  @Prop({ required: true, unique: true })
+  serialNumber!: string;
+
   @Prop({ type: Types.ObjectId, ref: Category.name, required: true })
   category!: Types.ObjectId;
 }
@@ -30,3 +33,4 @@ export const EquipementSchema = SchemaFactory.createForClass(Equipement);
 EquipementSchema.index({ status: 1 });
 EquipementSchema.index({ category: 1 });
 EquipementSchema.index({ status: 1, category: 1 });
+EquipementSchema.index({ serialNumber: 1 }, { unique: true });

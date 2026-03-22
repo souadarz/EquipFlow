@@ -31,6 +31,11 @@ export class EquipementService {
       throw new NotFoundException('Catégorie introuvable');
     }
 
+    const existingEquip = await this.equipementModel.exists({ serialNumber: createEquipementDto.serialNumber });
+    if (existingEquip) {
+      throw new ConflictException('Un équipement avec ce numéro de série existe déjà');
+    }
+
     const equipement = new this.equipementModel({
       ...createEquipementDto,
       category: new Types.ObjectId(createEquipementDto.category),
@@ -85,7 +90,7 @@ export class EquipementService {
     return equipement;
   }
 
-  async update(id: number, updateEquipementDto: UpdateEquipementDto) {
+  async update(id: string, updateEquipementDto: UpdateEquipementDto) {
     const equipment = await this.equipementModel.findByIdAndUpdate(
       id,
       updateEquipementDto,
@@ -99,7 +104,7 @@ export class EquipementService {
     return equipment;
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string): Promise<{ message: string }> {
     const equipement = await this.equipementModel.findById(id).lean();
     if (!equipement)
       throw new NotFoundException(`Équipement #${id} introuvable`);
@@ -116,5 +121,6 @@ export class EquipementService {
     }
 
     await this.equipementModel.findByIdAndDelete(id);
+    return { message: 'equipemant supprimé' };
   }
 }
