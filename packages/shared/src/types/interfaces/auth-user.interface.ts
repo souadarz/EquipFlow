@@ -1,7 +1,0 @@
-import { Types } from 'mongoose';
-import { Role } from '../enums';
-export interface AuthUser {
-  id: string;
-  email: string;
-  role: Role;
-}
