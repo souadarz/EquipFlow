@@ -1,6 +1,8 @@
 {
   "extends": "@repo/typescript-config/base.json",
   "compilerOptions": {
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "ES2021",
