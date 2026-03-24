@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "EquipFlow",
   "private": true,
   "scripts": {
@@ -17,4 +18,16 @@
   "engines": {
     "node": ">=18"
   }
+=======
+	"name": "my-monorepo",
+  	"private": true,
+	"scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint"
+  },
+	"devDependencies": {
+		"turbo": "^2.8.14"
+	}
+>>>>>>> 0bd53b1d71e6e2bfc9ea829240b5eff41073dce3
 }

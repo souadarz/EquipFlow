@@ -1,3 +1,7 @@
 packages:
   - "apps/*"
+<<<<<<< HEAD
   - "packages/*"
+=======
+  - "packages/*"
+>>>>>>> 0bd53b1d71e6e2bfc9ea829240b5eff41073dce3

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Turborepo starter
 
 This Turborepo starter is maintained by the Turborepo core team.
@@ -157,3 +158,7 @@ Learn more about the power of Turborepo:
 - [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
 - [Configuration Options](https://turborepo.dev/docs/reference/configuration)
 - [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+=======
+# EquipFlow
+gestion des équipements
+>>>>>>> 0bd53b1d71e6e2bfc9ea829240b5eff41073dce3
