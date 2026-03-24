@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import Sidebar from '@/components/layout/Sidebar';
 import Navbar from '@/components/layout/Navbar';
 import Spinner from '@/components/ui/Spinner';
+import { EquipementProvider } from '@/context/EquipementContext';
 
 export default function DashboardLayout({
     children,
@@ -30,14 +31,16 @@ export default function DashboardLayout({
     if (!user) return null;
 
     return (
-        <div className="flex h-screen overflow-hidden bg-bg">
-            <Sidebar />
-            <div className="flex flex-1 flex-col overflow-hidden">
-                <Navbar />
-                <main className="flex-1 overflow-y-auto p-6">
-                    {children}
-                </main>
+        <EquipementProvider>
+            <div className="flex h-screen overflow-hidden bg-bg">
+                <Sidebar />
+                <div className="flex flex-1 flex-col overflow-hidden">
+                    <Navbar />
+                    <main className="flex-1 overflow-y-auto p-6">
+                        {children}
+                    </main>
+                </div>
             </div>
-        </div>
+        </EquipementProvider>
     );
 }

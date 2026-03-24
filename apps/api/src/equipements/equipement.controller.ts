@@ -19,7 +19,7 @@ import { Roles } from 'src/common/decorators/role.decorator';
 import { Role } from '@repo/shared';
 import { QueryEquipementDto } from './dto/QueryEquipementDto';
 
-@Controller('equipement')
+@Controller('equipements')
 @UseGuards(JwtAuthGuard)
 export class EquipementController {
   constructor(private readonly equipementService: EquipementService) {}

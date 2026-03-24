@@ -1,8 +1,11 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Response } from 'express';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
+import { AuthUser } from '@repo/shared';
 
 @Controller('auth')
 export class AuthController {
@@ -28,7 +31,7 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 2,
     });
 
-    return { message: 'Login successful' };
+    return { user };
   }
 
   @Post('register')
@@ -44,5 +47,11 @@ export class AuthController {
       sameSite: 'lax',
     });
     return { message: 'Déconnecté' };
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  getProfile(@CurrentUser() user: AuthUser) {
+    return this.authService.getProfile(user.id);
   }
 }

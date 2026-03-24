@@ -22,7 +22,7 @@ import { ParseObjectIdPipe } from 'src/common/pipes/parse-object-id.pipe';
 import { Types } from 'mongoose';
 import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
 
-@Controller('reservation')
+@Controller('reservations')
 @UseGuards(JwtAuthGuard)
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) { }

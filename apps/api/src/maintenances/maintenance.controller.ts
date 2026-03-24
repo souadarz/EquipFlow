@@ -9,7 +9,7 @@ import { ParseObjectIdPipe } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { CloseMaintenanceDto } from './dto/close-maintenance.dto';
 
-@Controller('maintenance')
+@Controller('maintenances')
 @UseGuards(JwtAuthGuard)
 @Roles(Role.ADMIN)
 
