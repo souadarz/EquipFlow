@@ -1,7 +1,7 @@
 'use client';
 
 import {
-    createContext, useContext,
+    createContext,
     useState, useCallback, ReactNode,
 } from 'react';
 import toast from 'react-hot-toast';

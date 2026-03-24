@@ -3,6 +3,7 @@ import { ICategory }        from './category.interface';
 
 export interface IEquipement {
   _id:         string;
+  serialNumber: string;
   name:        string;
   description: string;
   status:      EquipementStatus;
