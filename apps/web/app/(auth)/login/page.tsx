@@ -27,7 +27,6 @@ function BrandingPanel({ title, subtitle }: { title: string; subtitle: string })
                     {[
                         'Réservation en quelques clics',
                         'Suivi temps réel des équipements',
-                        'Dashboard personnalisé par rôle',
                     ].map((item, i) => (
                         <div key={i} className="flex items-center gap-3">
                             <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
