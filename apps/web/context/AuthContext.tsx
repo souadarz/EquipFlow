@@ -33,10 +33,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    meService()
-      .then(setUser)
-      .catch(() => setUser(null))
-      .finally(() => setLoading(false));
+    const fetchUser = async () => {
+      try {
+        const user = await meService();
+        setUser(user);
+      } catch (err: any) {
+        if (err?.response?.status === 401) {
+          setUser(null);
+        } else {
+          console.error('error fetching user');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
   }, []);
 
   //login
