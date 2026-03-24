@@ -124,7 +124,7 @@ export class ReservationService {
 
     const data = await this.reservationModel
       .find(filter)
-      .populate('equipement', 'code name status')
+      .populate('equipement', 'name status')
       .populate('user', 'fullname email')
       .sort({ startDate: -1 })
       .skip(skip)
