@@ -27,7 +27,7 @@ export default function AdminDashboardPage() {
             {/* Heading */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-extrabold text-gray-900">Vue d'ensemble</h1>
+                    <h1 className="text-2xl font-extrabold text-gray-900">Vue d&apos;ensemble</h1>
                     <p className="text-textgray mt-1 text-sm">Tableau de bord administrateur.</p>
                 </div>
                 <Link

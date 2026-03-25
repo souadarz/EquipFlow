@@ -8,6 +8,7 @@ import Navbar from '@/components/layout/Navbar';
 import Spinner from '@/components/ui/Spinner';
 import { EquipementProvider } from '@/context/EquipementContext';
 
+console.log('DASHBOARD LAYOUT');
 export default function DashboardLayout({
     children,
 }: {
@@ -26,6 +27,7 @@ export default function DashboardLayout({
                 <Spinner />
             </div>
         );
+        
     }
 
     if (!user) return null;
