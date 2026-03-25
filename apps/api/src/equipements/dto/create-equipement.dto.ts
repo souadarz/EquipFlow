@@ -26,4 +26,8 @@ export class CreateEquipementDto {
 
   @IsMongoId()
   category!: string;
+
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
 }

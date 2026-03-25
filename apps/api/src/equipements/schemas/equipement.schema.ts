@@ -25,6 +25,9 @@ export class Equipement {
 
   @Prop({ type: Types.ObjectId, ref: Category.name, required: true })
   category!: Types.ObjectId;
+
+  @Prop({ trim: true, default: '' })
+  imageUrl?: string;
 }
 
 export const EquipementSchema = SchemaFactory.createForClass(Equipement);

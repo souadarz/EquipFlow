@@ -40,7 +40,7 @@ export default function EquipementDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-20">
+      <div className="flex justify-center py-20 min-h-[50vh] items-center">
         <Spinner size="lg" />
       </div>
     );
@@ -51,144 +51,163 @@ export default function EquipementDetailPage() {
   const reservable = equipement.status === EquipementStatus.DISPONIBLE;
 
   return (
-    <div className="max-w-5xl space-y-6">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-textgray">
-        <Link href="/equipements" className="hover:text-primary transition-colors">
-          Équipements
+    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in zoom-in-95 duration-500 pb-16">
+
+      {/* Breadcrumb premium */}
+      <div className="flex items-center gap-2 text-sm text-textgray bg-white w-max px-4 py-2 rounded-full shadow-sm border border-gray-100">
+        <Link href="/equipements" className="hover:text-primary transition-colors flex items-center gap-1 font-semibold">
+          <span className="material-icons" style={{ fontSize: '18px' }}>arrow_back</span>
+          Retour au catalogue
         </Link>
-        <span className="material-icons" style={{ fontSize: '16px' }}>chevron_right</span>
-        <span className="text-gray-900 font-medium">{equipement.name}</span>
+        <span className="material-icons text-gray-300" style={{ fontSize: '18px' }}>chevron_right</span>
+        <span className="text-gray-900 font-bold truncate max-w-[200px]">{equipement.name}</span>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Colonne gauche */}
-        <div className="space-y-5">
-          <div className="bg-bg rounded-2xl h-72 flex items-center justify-center border border-gray-200">
-            <span className="material-icons text-secondary" style={{ fontSize: '96px', opacity: 0.6 }}>
-              inventory_2
-            </span>
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-          <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <div className="flex items-start justify-between mb-5">
-              <h1 className="text-2xl font-extrabold text-gray-900">{equipement.name}</h1>
+        {/* Colonne Gauche - Image Hero (Span 7) */}
+        <div className="lg:col-span-7 space-y-6">
+          <div className="relative bg-gray-50 rounded-3xl overflow-hidden border border-gray-200 shadow-sm group min-h-[400px] flex items-center justify-center">
+            {equipement.imageUrl ? (
+              <img
+                src={equipement.imageUrl}
+                alt={equipement.name}
+                className="w-full h-full object-cover absolute inset-0 transition-transform duration-700 group-hover:scale-105"
+              />
+            ) : (
+              <span className="material-icons text-secondary" style={{ fontSize: '120px', opacity: 0.2 }}>
+                inventory_2
+              </span>
+            )}
+
+            {/* Overlay Gradient pour la lisibilité */}
+            <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent opacity-80"></div>
+
+            {/* Badges flottants */}
+            <div className="absolute top-4 left-4 flex gap-2">
+              <span className="bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
+                {equipement.category?.name ?? 'Générique'}
+              </span>
               <EquipementStatusBadge status={equipement.status} />
             </div>
 
-            <div className="space-y-3">
-              {[
-                { label: 'N° de série', value: equipement.serialNumber, mono: true },
-                { label: 'Catégorie', value: equipement.category?.name ?? '—' },
-                {
-                  label: 'Ajouté le',
-                  value: new Date(equipement.createdAt).toLocaleDateString('fr-FR', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric',
-                  }),
-                },
-              ].map(row => (
-                <div
-                  key={row.label}
-                  className="flex justify-between items-center py-2.5 border-b border-gray-50 last:border-0"
-                >
-                  <span className="text-textgray text-sm font-medium">{row.label}</span>
-                  <span className={`text-sm font-semibold text-gray-800 ${row.mono ? 'font-mono' : ''}`}>
-                    {row.value}
-                  </span>
-                </div>
-              ))}
+            {/* Infos flottantes bas */}
+            <div className="absolute bottom-6 left-6 right-6 text-white">
+              <h1 className="text-3xl md:text-4xl font-extrabold drop-shadow-lg mb-2 leading-tight">{equipement.name}</h1>
+              <p className="opacity-90 font-mono text-sm bg-black/40 w-max px-2.5 py-1.5 rounded-lg backdrop-blur-md border border-white/10">
+                SN: {equipement.serialNumber}
+              </p>
             </div>
+          </div>
 
-            {equipement.description && (
-              <p className="text-textgray text-sm mt-4 leading-relaxed">{equipement.description}</p>
+          <div className="bg-white rounded-3xl border border-gray-100 p-8 shadow-sm">
+            <h2 className="text-xl font-bold text-gray-900 mb-5 flex items-center gap-2">
+              <span className="material-icons text-primary rounded-lg bg-primary/10 p-1.5" style={{ fontSize: '20px' }}>description</span>
+              Description
+            </h2>
+            {equipement.description ? (
+              <p className="text-textgray text-base leading-relaxed whitespace-pre-line">
+                {equipement.description}
+              </p>
+            ) : (
+              <p className="text-gray-400 italic">Aucune description n&apos;a été fournie pour cet équipement.</p>
             )}
           </div>
         </div>
 
-        {/* Colonne droite */}
-        <div className="space-y-5">
-          <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span className="material-icons text-secondary" style={{ fontSize: '20px' }}>
-                calendar_month
-              </span>
-              Disponibilité
-            </h3>
+        {/* Colonne Droite - Détails & Actions (Span 5) */}
+        <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-6">
 
-            {reservable ? (
-              <div className="flex items-center gap-3 p-4 bg-green-50 rounded-xl border border-green-100">
-                <span className="material-icons text-green-600" style={{ fontSize: '24px' }}>check_circle</span>
-                <div>
-                  <p className="font-semibold text-green-700 text-sm">Disponible maintenant</p>
-                  <p className="text-green-600/80 text-xs mt-0.5">Cet équipement peut être réservé immédiatement.</p>
+          {/* Card Disponibilité */}
+          <div className="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-black/5 overflow-hidden">
+            <div className="h-1.5 w-full bg-gradient-to-r from-blue-500 to-primary"></div>
+            <div className="p-8 space-y-8">
+
+              <div>
+                <h3 className="font-bold text-gray-400 uppercase tracking-wider text-xs mb-4">Disponibilité</h3>
+                {reservable ? (
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-green-100 flex items-center justify-center text-green-600 shadow-inner">
+                      <span className="material-icons" style={{ fontSize: '32px' }}>check_circle</span>
+                    </div>
+                    <div>
+                      <p className="font-extrabold text-gray-900 text-lg">Disponible</p>
+                      <p className="text-green-600 font-semibold text-sm">Prêt pour réservation</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-600 shadow-inner">
+                      <span className="material-icons" style={{ fontSize: '32px' }}>front_hand</span>
+                    </div>
+                    <div>
+                      <p className="font-extrabold text-gray-900 text-lg">Indisponible</p>
+                      <p className="text-amber-600 font-semibold text-sm">Actuellement {equipement.status.replace('_', ' ').toLowerCase()}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <hr className="border-gray-100" />
+
+              <div>
+                <h3 className="font-bold text-gray-400 uppercase tracking-wider text-xs mb-4">Détails de l&apos;enregistrement</h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-500 flex items-center gap-2">
+                      <span className="material-icons text-gray-400" style={{ fontSize: '18px' }}>event</span>
+                      Ajouté le
+                    </span>
+                    <span className="font-semibold text-gray-900 bg-gray-50 px-3 py-1 rounded-lg">
+                      {new Date(equipement.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </span>
+                  </div>
                 </div>
               </div>
-            ) : (
-              <div className="flex items-center gap-3 p-4 bg-amber-50 rounded-xl border border-amber-100">
-                <span className="material-icons text-amber-600" style={{ fontSize: '24px' }}>schedule</span>
-                <div>
-                  <p className="font-semibold text-amber-700 text-sm">
-                    Actuellement {equipement.status.replace('_', ' ')}
-                  </p>
-                  <p className="text-amber-600/80 text-xs mt-0.5">Cet équipement n&apos;est pas disponible à la réservation.</p>
-                </div>
+
+              {/* Actions Principales */}
+              <div className="pt-2 space-y-3">
+                {!isAdmin && (
+                  <button
+                    onClick={() => setShowModal(true)}
+                    disabled={!reservable}
+                    className={`w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-2 text-base transition-all
+                      ${reservable
+                        ? 'bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/30 hover:-translate-y-1'
+                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      }`}
+                  >
+                    <span className="material-icons" style={{ fontSize: '20px' }}>event_available</span>
+                    {reservable ? 'Réserver maintenant' : 'Indisponible'}
+                  </button>
+                )}
+
+                {isAdmin && (
+                  <div className="grid grid-cols-2 gap-3">
+                    <Link
+                      href={`/equipements/${equipement._id}/edit`}
+                      className="w-full py-3.5 rounded-2xl font-bold flex items-center justify-center
+                        gap-2 text-sm bg-primary hover:bg-primary/90 text-white
+                        shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5"
+                    >
+                      <span className="material-icons" style={{ fontSize: '18px' }}>edit</span>
+                      Modifier
+                    </Link>
+                    <button
+                      className="w-full py-3.5 rounded-2xl font-bold flex items-center justify-center
+                        gap-2 text-sm bg-white border-2 border-red-50 text-red-600 hover:bg-red-50
+                        transition-all hover:-translate-y-0.5"
+                    >
+                      <span className="material-icons" style={{ fontSize: '18px' }}>delete</span>
+                      Supprimer
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
+
+            </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-3">
-            <h3 className="font-bold text-gray-900 mb-4">Actions</h3>
-
-            {!isAdmin && (
-              <button
-                onClick={() => setShowModal(true)}
-                disabled={!reservable}
-                className={`w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2
-                  text-sm transition-all
-                  ${reservable
-                    ? 'bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20'
-                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  }`}
-              >
-                <span className="material-icons" style={{ fontSize: '18px' }}>event_available</span>
-                {reservable ? 'Réserver cet équipement' : 'Indisponible à la réservation'}
-              </button>
-            )}
-
-            {isAdmin && (
-              <>
-                <Link
-                  href={`/equipements/${equipement._id}/edit`}
-                  className="w-full py-3.5 rounded-xl font-bold flex items-center justify-center
-                    gap-2 text-sm bg-primary hover:bg-primary/90 text-white
-                    shadow-lg shadow-primary/20 transition-all"
-                >
-                  <span className="material-icons" style={{ fontSize: '18px' }}>edit</span>
-                  Modifier l&apos;équipement
-                </Link>
-                <Link
-                  href="/maintenance/new"
-                  className="w-full py-3.5 rounded-xl font-bold flex items-center justify-center
-                    gap-2 text-sm border-2 border-amber-200 text-amber-700
-                    hover:bg-amber-50 transition-all"
-                >
-                  <span className="material-icons" style={{ fontSize: '18px' }}>build</span>
-                  Ouvrir une maintenance
-                </Link>
-              </>
-            )}
-
-            <Link
-              href="/equipements"
-              className="w-full py-3 rounded-xl font-semibold flex items-center justify-center
-                gap-2 text-sm border border-gray-200 text-textgray hover:bg-gray-50 transition-all"
-            >
-              <span className="material-icons" style={{ fontSize: '18px' }}>arrow_back</span>
-              Retour au catalogue
-            </Link>
-          </div>
         </div>
       </div>
 
