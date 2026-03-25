@@ -50,7 +50,7 @@ export default function EquipementForm({ equipement }: Props) {
   useEffect(() => {
     findAllCategories()
       .then(data => {
-        if (data) setCategories(data.data);
+        if (data) setCategories(data);
       })
       .catch(() => { });
   }, []);

@@ -8,9 +8,10 @@ import { Role } from '@repo/shared';
 import { ParseObjectIdPipe } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { CloseMaintenanceDto } from './dto/close-maintenance.dto';
+import { RolesGuard } from 'src/common/guards/role.guard';
 
 @Controller('maintenances')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(Role.ADMIN)
 
 

@@ -28,7 +28,6 @@ export default function DashboardLayout({
                 <Spinner />
             </div>
         );
-
     }
 
     if (!user) return null;

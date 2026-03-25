@@ -20,12 +20,11 @@ import { Role } from '@repo/shared';
 import { QueryEquipementDto } from './dto/QueryEquipementDto';
 
 @Controller('equipements')
-@UseGuards(JwtAuthGuard)
 export class EquipementController {
-  constructor(private readonly equipementService: EquipementService) {}
+  constructor(private readonly equipementService: EquipementService) { }
 
   @Post()
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   create(@Body() createEquipementDto: CreateEquipementDto) {
     return this.equipementService.create(createEquipementDto);
@@ -42,7 +41,7 @@ export class EquipementController {
   }
 
   @Patch(':id')
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   update(
     @Param('id', ParseObjectIdPipe) id: string,
@@ -52,7 +51,7 @@ export class EquipementController {
   }
 
   @Delete(':id')
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   remove(@Param('id', ParseObjectIdPipe) id: string) {
     return this.equipementService.remove(id);

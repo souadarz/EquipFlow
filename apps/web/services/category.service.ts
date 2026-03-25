@@ -4,6 +4,8 @@ import { ICategory, ICategoryPayload, IPaginatedResponse } from '@repo/shared';
 export async function findAllCategories() {
   try {
     const response = await api.get<IPaginatedResponse<ICategory>>('/categories');
+  
+    console.log("response", response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching categories:', error);

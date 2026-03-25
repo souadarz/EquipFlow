@@ -31,7 +31,7 @@ export default function CategoriesPage() {
     const load = async () => {
         setLoading(true);
         const data = await findAllCategories();
-        if (data) setCategories(data.data);
+        if (data) setCategories(data);
         setLoading(false);
     };
 
@@ -63,6 +63,8 @@ export default function CategoriesPage() {
             toast.error(Array.isArray(msg) ? msg[0] : 'Erreur lors de la suppression');
         }
     };
+
+    console.log("caaaaaaaaaaaaat", categories)
 
     return (
         <div className="max-w-3xl space-y-6">
