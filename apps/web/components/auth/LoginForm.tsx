@@ -113,7 +113,7 @@ export default function LoginForm() {
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                         </svg>
                     )}
-                    {isSubmitting ? 'Connexion...' : 'Accéder au tableau de bord'}
+                    {isSubmitting ? 'Connexion...' : 'Se Connecter'}
                 </button>
             </form>
 

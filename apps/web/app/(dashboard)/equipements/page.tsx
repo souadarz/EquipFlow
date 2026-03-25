@@ -140,6 +140,7 @@ export default function EquipementsPage() {
                         <EquipementCard
                             key={eq._id}
                             equipement={eq}
+                            variant="dashboard"
                             isAdmin={isAdmin}
                             onReserve={() => setSelected(eq)}
                             onDelete={() => handleDelete(eq._id)}

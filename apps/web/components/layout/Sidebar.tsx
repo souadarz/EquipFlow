@@ -62,8 +62,7 @@ export default function Sidebar() {
     const links = isAdmin ? adminLinks : userLinks;
 
     // Initiales de l'utilisateur
-    const initials = user?.fullname
-        .split(' ')
+    const initials = user?.fullname?.split(' ')
         .map(n => n[0])
         .join('')
         .toUpperCase()

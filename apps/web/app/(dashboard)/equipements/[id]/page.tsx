@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import Spinner from '@/components/ui/Spinner';
 import EquipementStatusBadge from '@/components/ui/EquipementStatusBadge';
-import ReservationModal from '@/components/reservations/ReservationModal';
+import ReservationModal from '@/components/resevations/reservationModal';
 import { EquipementStatus } from '@repo/shared';
 import type { IEquipement } from '@repo/shared';
 import { findOneEquipement } from '@/services/equipement.service';
@@ -27,7 +27,7 @@ export default function EquipementDetailPage() {
       const data = await findOneEquipement(id);
 
       if (!data) {
-        router.replace('/equipements'); // redirection si pas trouvé
+        router.replace('/equipements');
         return;
       }
 
@@ -132,7 +132,7 @@ export default function EquipementDetailPage() {
                   <p className="font-semibold text-amber-700 text-sm">
                     Actuellement {equipement.status.replace('_', ' ')}
                   </p>
-                  <p className="text-amber-600/80 text-xs mt-0.5">Cet équipement n'est pas disponible à la réservation.</p>
+                  <p className="text-amber-600/80 text-xs mt-0.5">Cet équipement n&apos;est pas disponible à la réservation.</p>
                 </div>
               </div>
             )}
@@ -166,7 +166,7 @@ export default function EquipementDetailPage() {
                     shadow-lg shadow-primary/20 transition-all"
                 >
                   <span className="material-icons" style={{ fontSize: '18px' }}>edit</span>
-                  Modifier l'équipement
+                  Modifier l&apos;équipement
                 </Link>
                 <Link
                   href="/maintenance/new"

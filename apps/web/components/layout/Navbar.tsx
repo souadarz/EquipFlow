@@ -67,8 +67,7 @@ export default function Navbar() {
               text-primary font-bold text-xs flex-shrink-0"
                         style={{ background: '#a3cef1' }}
                     >
-                        {user?.fullname
-                            .split(' ')
+                        {user?.fullname?.split(' ')
                             .map(n => n[0])
                             .join('')
                             .toUpperCase()
