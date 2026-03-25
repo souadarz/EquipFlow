@@ -1,14 +1,13 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useEquipement } from '@/hooks/useEquipement';
 import { useAuth } from '@/hooks/useAuth';
 import Spinner from '@/components/ui/Spinner';
 import EquipementCard from '@/components/equipements/EquipementCard';
-// import ReservationModal from '@/components/reservations/ReservationModal';
-import { EquipementStatus } from '@repo/shared';
-import type { Equipement } from '@/services/equipement.service';
+import ReservationModal from '@/components/resevations/reservationModal';
+import { EquipementStatus, IEquipement } from '@repo/shared';
 
 const STATUS_OPTIONS = [
     { value: '', label: 'Tous les états' },
@@ -22,15 +21,13 @@ export default function EquipementsPage() {
     const { equipements, loading, fetchAll, remove } = useEquipement();
     const { isAdmin } = useAuth();
 
-    // Filtres locaux
     const [search, setSearch] = useState('');
     const [status, setStatus] = useState('');
     const [page, setPage] = useState(1);
+    const [searchInput, setSearchInput] = useState('');
 
-    // Modal réservation
-    const [selected, setSelected] = useState<Equipement | null>(null);
+    const [selected, setSelected] = useState<IEquipement | null>(null);
 
-    // Chargement initial + re-fetch quand les filtres changent
     useEffect(() => {
         fetchAll({
             search: search || undefined,
@@ -40,11 +37,14 @@ export default function EquipementsPage() {
         });
     }, [search, status, page]);
 
-    // Debounce recherche
-    const handleSearch = useCallback((value: string) => {
-        setSearch(value);
-        setPage(1);
-    }, []);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setSearch(searchInput);
+            setPage(1);
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [searchInput]);
 
     const handleStatusChange = (value: string) => {
         setStatus(value);
@@ -94,8 +94,8 @@ export default function EquipementsPage() {
                     <input
                         type="text"
                         placeholder="Rechercher un équipement..."
-                        value={search}
-                        onChange={e => handleSearch(e.target.value)}
+                        value={searchInput}
+                        onChange={e => setSearchInput(e.target.value)}
                         className="w-full pl-10 pr-4 py-2.5 border-2 border-gray-200 rounded-xl
               outline-none text-sm bg-white focus:border-primary
               focus:ring-2 focus:ring-primary/10 transition-all"
@@ -127,7 +127,7 @@ export default function EquipementsPage() {
                     <p className="font-medium">Aucun équipement trouvé</p>
                     {search && (
                         <button
-                            onClick={() => handleSearch('')}
+                            onClick={() => setSearchInput('')}
                             className="text-primary text-sm font-semibold hover:underline"
                         >
                             Effacer la recherche
@@ -166,7 +166,7 @@ export default function EquipementsPage() {
                             key={p}
                             onClick={() => setPage(p)}
                             className={`w-9 h-9 rounded-lg text-sm font-semibold transition-all
-                ${p === page
+                                ${p === page
                                     ? 'bg-primary text-white'
                                     : 'border border-gray-200 text-textgray hover:border-primary hover:text-primary'
                                 }`}

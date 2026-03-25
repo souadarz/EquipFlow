@@ -1,25 +1,24 @@
 'use client';
 
-import { useEffect, useState }  from 'react';
-import { useForm }              from 'react-hook-form';
-import { useRouter }            from 'next/navigation';
-import Link                     from 'next/link';
-import { Input }                from '@/components/ui/Input';
-import { useEquipement }        from '@/hooks/useEquipement';
-import { findAllCategories }    from '@/services/category.service';
-import { EquipementStatus }     from '@repo/shared';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Input } from '@/components/ui/Input';
+import { useEquipement } from '@/hooks/useEquipement';
+import { findAllCategories } from '@/services/category.service';
+import { EquipementStatus } from '@repo/shared';
 import type {
   IEquipement,
   ICategory,
   IEquipementPayload,
 } from '@repo/shared';
 
-
 interface FormValues {
-  name:         string;
-  description:  string;
-  category:     string;
-  status:       EquipementStatus;
+  name: string;
+  description: string;
+  category: string;
+  status: EquipementStatus;
   serialNumber: string;
 }
 
@@ -28,10 +27,10 @@ interface Props {
 }
 
 export default function EquipementForm({ equipement }: Props) {
-  const isEdit                        = !!equipement;
-  const { create, update }            = useEquipement();
-  const router                        = useRouter();
-  const [categories, setCategories]   = useState<ICategory[]>([]);
+  const isEdit = !!equipement;
+  const { create, update } = useEquipement();
+  const router = useRouter();
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const [serverError, setServerError] = useState<string | null>(null);
 
   const {
@@ -40,11 +39,11 @@ export default function EquipementForm({ equipement }: Props) {
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     defaultValues: {
-      name:         equipement?.name           ?? '',
-      description:  equipement?.description    ?? '',
-      category:     equipement?.category?._id  ?? '',
-      status:       equipement?.status         ?? EquipementStatus.DISPONIBLE,
-      serialNumber: equipement?.serialNumber   ?? '',
+      name: equipement?.name ?? '',
+      description: equipement?.description ?? '',
+      category: equipement?.category?._id ?? '',
+      status: equipement?.status ?? EquipementStatus.DISPONIBLE,
+      serialNumber: equipement?.serialNumber ?? '',
     },
   });
 
@@ -53,17 +52,17 @@ export default function EquipementForm({ equipement }: Props) {
       .then(data => {
         if (data) setCategories(data.data);
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const onSubmit = async (values: FormValues) => {
     setServerError(null);
     try {
       const payload: IEquipementPayload = {
-        name:         values.name,
-        description:  values.description,
-        category:     values.category,
-        status:       values.status,
+        name: values.name,
+        description: values.description,
+        category: values.category,
+        status: values.status,
         serialNumber: values.serialNumber,
       };
 
@@ -129,7 +128,7 @@ export default function EquipementForm({ equipement }: Props) {
             placeholder="Ex: PC Portable Dell XPS"
             error={errors.name?.message}
             {...register('name', {
-              required:  'Le nom est obligatoire',
+              required: 'Le nom est obligatoire',
               minLength: { value: 2, message: '2 caractères minimum' },
             })}
           />
@@ -226,25 +225,17 @@ export default function EquipementForm({ equipement }: Props) {
             </div>
           </div>
 
-          {/* Numéro de série en lecture seule si édition */}
-          {isEdit && (
-            <div className="p-4 bg-bg rounded-xl border border-gray-200">
-              <div className="flex items-center gap-2 mb-1">
-                <span
-                  className="material-icons text-secondary"
-                  style={{ fontSize: '16px' }}
-                >
-                  qr_code
-                </span>
-                <span className="text-xs font-semibold text-textgray uppercase tracking-wider">
-                  Numéro de série (immuable)
-                </span>
-              </div>
-              <span className="font-mono text-sm text-primary font-bold">
-                {equipement?.serialNumber}
-              </span>
-            </div>
-          )}
+          {/* serialNumber */}
+          <Input
+            id="serialNumber"
+            label="Numéro de série"
+            placeholder="Ex: SN-2024-001, DELL-XPS-0042..."
+            error={errors.serialNumber?.message}
+            helperText="Numéro de série physique de l'équipement"
+            {...register('serialNumber', {
+              required: 'Le numéro de série est obligatoire',
+            })}
+          />
 
           {/* Boutons */}
           <div className="flex gap-3 pt-2">

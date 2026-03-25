@@ -78,7 +78,7 @@ export default function EquipementDetailPage() {
 
             <div className="space-y-3">
               {[
-                { label: 'Code', value: equipement.code, mono: true },
+                { label: 'N° de série', value: equipement.serialNumber, mono: true },
                 { label: 'Catégorie', value: equipement.category?.name ?? '—' },
                 {
                   label: 'Ajouté le',
