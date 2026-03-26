@@ -59,7 +59,7 @@ describe('AuthController', () => {
     it('devrait valider l\'utilisateur et retourner le user avec un cookie', async () => {
       const res = mockResponse();
       authService.validateUser.mockResolvedValue(mockUser);
-      authService.login.mockResolvedValue({ token: 'jwt-token-abc' });
+      authService.login.mockResolvedValue({ access_token: 'jwt-token-abc' });
 
       const result = await controller.login(loginDto, res);
 
