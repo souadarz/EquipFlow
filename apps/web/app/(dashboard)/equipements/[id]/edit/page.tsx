@@ -6,6 +6,7 @@ import EquipementForm from '@/components/equipements/EquipementForm';
 import Spinner from '@/components/ui/Spinner';
 import type { IEquipement } from '@repo/shared';
 import { findOneEquipement } from '@/services/equipement.service';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
 export default function EditEquipementPage() {
   const { id } = useParams<{ id: string }>();
@@ -43,5 +44,9 @@ export default function EditEquipementPage() {
 
   if (!equipement) return null;
 
-  return <EquipementForm equipement={equipement} />;
+  return (
+    <ProtectedRoute requireAdmin={true}>
+      <EquipementForm equipement={equipement} />
+    </ProtectedRoute>
+  );
 }

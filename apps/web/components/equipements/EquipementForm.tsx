@@ -20,6 +20,7 @@ interface FormValues {
   category: string;
   status: EquipementStatus;
   serialNumber: string;
+  imageUrl: string;
 }
 
 interface Props {
@@ -44,6 +45,7 @@ export default function EquipementForm({ equipement }: Props) {
       category: equipement?.category?._id ?? '',
       status: equipement?.status ?? EquipementStatus.DISPONIBLE,
       serialNumber: equipement?.serialNumber ?? '',
+      imageUrl: equipement?.imageUrl ?? '',
     },
   });
 
@@ -64,6 +66,7 @@ export default function EquipementForm({ equipement }: Props) {
         category: values.category,
         status: values.status,
         serialNumber: values.serialNumber,
+        imageUrl: values.imageUrl || undefined,
       };
 
       if (isEdit) {
@@ -235,6 +238,15 @@ export default function EquipementForm({ equipement }: Props) {
             {...register('serialNumber', {
               required: 'Le numéro de série est obligatoire',
             })}
+          />
+
+          {/* URL Image */}
+          <Input
+            id="imageUrl"
+            label="URL de l'image (Optionnel)"
+            placeholder="Ex: https://example.com/image.jpg"
+            error={errors.imageUrl?.message}
+            {...register('imageUrl')}
           />
 
           {/* Boutons */}
