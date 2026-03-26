@@ -8,7 +8,14 @@ import {
   Delete,
   UseGuards,
   Query,
+  UploadedFile,
+  UseInterceptors,
+  BadRequestException,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
+import * as fs from 'fs';
 import { EquipementService } from './equipement.service';
 import { CreateEquipementDto } from './dto/create-equipement.dto';
 import { UpdateEquipementDto } from './dto/update-equipement.dto';
@@ -28,6 +35,36 @@ export class EquipementController {
   @Roles(Role.ADMIN)
   create(@Body() createEquipementDto: CreateEquipementDto) {
     return this.equipementService.create(createEquipementDto);
+  }
+
+  @Post('upload-image')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: (req: any, file: Express.Multer.File, cb: (error: Error | null, dest: string) => void) => {
+          const dir = './uploads';
+          if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+          cb(null, dir);
+        },
+        filename: (req: any, file: Express.Multer.File, cb: (error: Error | null, dest: string) => void) => {
+          const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          cb(null, `${unique}${extname(file.originalname)}`);
+        },
+      }),
+      fileFilter: (req: any, file: Express.Multer.File, cb: (error: Error | null, acceptFile: boolean) => void) => {
+        if (!file.mimetype.startsWith('image/')) {
+          return cb(new BadRequestException('Seules les images sont acceptées'), false);
+        }
+        cb(null, true);
+      },
+      limits: { fileSize: 5 * 1024 * 1024 },
+    }),
+  )
+  uploadImage(@UploadedFile() file: Express.Multer.File) {
+    if (!file) throw new BadRequestException('Aucun fichier fourni');
+    return { url: `/uploads/${file.filename}` };
   }
 
   @Get()

@@ -11,10 +11,10 @@ import { EquipementStatus, IEquipement } from '@repo/shared';
 
 const STATUS_OPTIONS = [
     { value: '', label: 'Tous les états' },
-    { value: EquipementStatus.DISPONIBLE, label: '🟢 Disponible' },
-    { value: EquipementStatus.RESERVE, label: '🟠 Réservé' },
-    { value: EquipementStatus.EN_MAINTENANCE, label: '🔵 Maintenance' },
-    { value: EquipementStatus.HORS_SERVICE, label: '🔴 Hors service' },
+    { value: EquipementStatus.DISPONIBLE, label: 'Disponible' },
+    { value: EquipementStatus.RESERVE, label: 'Réservé' },
+    { value: EquipementStatus.EN_MAINTENANCE, label: 'Maintenance' },
+    { value: EquipementStatus.HORS_SERVICE, label: 'Hors service' },
 ];
 
 export default function EquipementsPage() {

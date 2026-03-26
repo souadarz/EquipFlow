@@ -53,7 +53,6 @@ export default function EquipementDetailPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in zoom-in-95 duration-500 pb-16">
 
-      {/* Breadcrumb premium */}
       <div className="flex items-center gap-2 text-sm text-textgray bg-white w-max px-4 py-2 rounded-full shadow-sm border border-gray-100">
         <Link href="/equipements" className="hover:text-primary transition-colors flex items-center gap-1 font-semibold">
           <span className="material-icons" style={{ fontSize: '18px' }}>arrow_back</span>
@@ -65,7 +64,7 @@ export default function EquipementDetailPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-        {/* Colonne Gauche - Image Hero (Span 7) */}
+        {/*image*/}
         <div className="lg:col-span-7 space-y-6">
           <div className="relative bg-gray-50 rounded-3xl overflow-hidden border border-gray-200 shadow-sm group min-h-[400px] flex items-center justify-center">
             {equipement.imageUrl ? (
