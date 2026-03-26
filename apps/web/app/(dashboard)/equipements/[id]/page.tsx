@@ -10,6 +10,7 @@ import ReservationModal from '@/components/resevations/reservationModal';
 import { EquipementStatus } from '@repo/shared';
 import type { IEquipement } from '@repo/shared';
 import { findOneEquipement } from '@/services/equipement.service';
+import EquipementCalendar from '@/components/equipements/EquipementCalendar';
 
 export default function EquipementDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -211,6 +212,9 @@ export default function EquipementDetailPage() {
       </div>
 
       {showModal && <ReservationModal equipement={equipement} onClose={() => setShowModal(false)} />}
+
+      {/* Calendrier de disponibilité */}
+      <EquipementCalendar equipementId={equipement._id} />
     </div>
   );
 }

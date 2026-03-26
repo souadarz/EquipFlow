@@ -12,6 +12,7 @@ import type { IEquipement } from '@repo/shared';
 import { findOneEquipement } from '@/services/equipement.service';
 import Footer from '@/components/layout/Footer';
 import { ReservationProvider } from '@/context/ReservationContext';
+import EquipementCalendar from '@/components/equipements/EquipementCalendar';
 
 export default function PublicEquipementDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -200,6 +201,11 @@ export default function PublicEquipementDetailPage() {
 
                         </div>
                     </div>
+                </div>
+
+                {/* Calendrier de disponibilité */}
+                <div className="max-w-6xl mx-auto w-full px-6 pb-8">
+                  <EquipementCalendar equipementId={equipement._id} />
                 </div>
 
                 <Footer />
