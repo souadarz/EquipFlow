@@ -17,13 +17,12 @@ import { Roles } from 'src/common/decorators/role.decorator';
 import { Role } from '@repo/shared';
 import { ParseObjectIdPipe } from 'src/common/pipes/parse-object-id.pipe';
 
-@Controller('category')
-@UseGuards(JwtAuthGuard)
+@Controller('categories')
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+  constructor(private readonly categoryService: CategoryService) { }
 
   @Post()
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);
@@ -40,7 +39,7 @@ export class CategoryController {
   }
 
   @Patch(':id')
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   update(
     @Param('id', ParseObjectIdPipe) id: string,
@@ -50,7 +49,7 @@ export class CategoryController {
   }
 
   @Delete(':id')
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   remove(@Param('id') id: string) {
     return this.categoryService.remove(id);

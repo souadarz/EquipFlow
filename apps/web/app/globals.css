@@ -1,26 +1,56 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-primary:   #274c77;
+  --color-secondary: #6096ba;
+  --color-accent:    #a3cef1;
+  --color-bg:        #e7ecef;
+  --color-textgray:  #8b8c89;
+
+  --font-display: 'Manrope', sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@layer base {
+  * { font-family: 'Manrope', sans-serif; }
+  body { @apply bg-bg text-gray-900 antialiased; }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer components {
+  .ef-input {
+    @apply w-full px-4 py-2.5 border border-gray-200 rounded-lg outline-none
+           text-sm transition-all bg-white
+           focus:ring-2 focus:ring-primary focus:border-transparent;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  .ef-input-error {
+    @apply border-red-400 focus:ring-red-200;
+  }
+  .btn-primary {
+    @apply bg-primary hover:bg-primary/90 text-white font-bold
+           rounded-xl transition-all active:scale-[0.98]
+           disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply border border-gray-200 text-textgray font-semibold
+           rounded-xl hover:bg-gray-50 transition-all;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5
+           rounded-full text-xs font-semibold;
+  }
+  .badge-disponible   { @apply bg-green-50  text-green-700;  }
+  .badge-reserve      { @apply bg-amber-50  text-amber-700;  }
+  .badge-maintenance  { @apply bg-blue-50   text-blue-700;   }
+  .badge-hors_service { @apply bg-red-50    text-red-700;    }
+  .badge-confirme  { @apply bg-green-50 text-green-700; }
+  .badge-active    { @apply bg-blue-50  text-blue-700;  }
+  .badge-annule    { @apply bg-red-50   text-red-700;   }
+  .badge-complete  { @apply bg-gray-100 text-textgray;  }
+  .card {
+    @apply bg-white rounded-2xl border border-gray-100;
+  }
+  .card-hover {
+    @apply transition-all duration-200
+           hover:-translate-y-0.5
+           hover:shadow-lg hover:shadow-primary/10;
+  }
 }

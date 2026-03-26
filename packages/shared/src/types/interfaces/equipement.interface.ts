@@ -1,27 +1,30 @@
 import { EquipementStatus } from '../enums';
-import { ICategory }        from './category.interface';
+import { ICategory } from './category.interface';
 
 export interface IEquipement {
-  _id:         string;
-  name:        string;
+  _id: string;
+  serialNumber: string;
+  name: string;
   description: string;
-  status:      EquipementStatus;
-  category:    ICategory;
-  createdAt:   string;
+  status: EquipementStatus;
+  category: ICategory;
+  createdAt: string;
+  imageUrl?: string;
 }
 
 export interface IEquipementPayload {
-  name:         string;
+  name: string;
   description?: string;
-  status?:      EquipementStatus;
+  status?: EquipementStatus;
   serialNumber: string;
-  category:     string;
+  category: string;
+  imageUrl?: string;
 }
 
 export interface IEquipementQuery {
-  status?:   EquipementStatus;
+  status?: EquipementStatus;
   category?: string;
-  search?:   string;
-  page?:     number;
-  limit?:    number;
+  search?: string;
+  page?: number;
+  limit?: number;
 }
