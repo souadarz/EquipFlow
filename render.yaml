@@ -10,7 +10,9 @@ services:
       - key: NODE_VERSION
         value: 20
       - key: MONGODB_URI
-        fromValue: YOUR_MONGODB_ATLAS_URI
+        sync: false # Render vous demandera la valeur dans l'interface
+      - key: JWT_SECRET
+        generateValue: true # Render générera une clé aléatoire pour vous
 
   # Le Web (Frontend)
   - type: web
