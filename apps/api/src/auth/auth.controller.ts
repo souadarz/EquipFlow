@@ -26,8 +26,9 @@ export class AuthController {
 
     res.cookie('token', access_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: true,
+      sameSite: 'none',
+      domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined,
       maxAge: 1000 * 60 * 60 * 2,
     });
 
@@ -43,8 +44,9 @@ export class AuthController {
   logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('token', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: true,
+      sameSite: 'none',
+      domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined,
     });
     return { message: 'Déconnecté' };
   }
