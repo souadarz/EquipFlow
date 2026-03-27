@@ -5,15 +5,6 @@ const api = axios.create({
   withCredentials: true,
 });
 
-api.interceptors.request.use((config) => {
-  const token = document.cookie
-  .split('; ')
-  .find(row => row.startsWith('token='))
-  ?.split('=')[1];
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+// No interceptor needed for session cookies with withCredentials: true
 
 export default api;
