@@ -1,24 +1,36 @@
-FROM node:18-alpine AS alpine
+# ---- BASE IMAGE ----
+FROM node:20-alpine AS base
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-RUN corepack enable pnpm
 
-FROM alpine AS builder
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# ---- BUILDER ----
+FROM base AS builder
 WORKDIR /app
-RUN pnpm install turbo --global
+
+RUN npm install -g turbo
+
 COPY . .
+
 RUN turbo prune api --docker
 
-FROM alpine AS installer
+# ---- INSTALLER ----
+FROM base AS installer
 WORKDIR /app
+
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+
 RUN pnpm install --frozen-lockfile
 
 COPY --from=builder /app/out/full/ .
+
+# Build de l'API
 RUN pnpm turbo run build --filter=api...
 
-FROM alpine AS runner
+# ---- RUNNER ----
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 RUN addgroup --system --gid 1001 nodejs
@@ -29,4 +41,4 @@ COPY --from=installer /app .
 
 EXPOSE 3001
 
-CMD ["node", "apps/api/dist/main"]
+CMD ["node", "apps/api/dist/main.js"]

@@ -21,6 +21,7 @@ interface FormValues {
   status: EquipementStatus;
   serialNumber: string;
   imageUrl: string;
+  quantity: number;
 }
 
 interface Props {
@@ -56,13 +57,14 @@ export default function EquipementForm({ equipement }: Props) {
       status: equipement?.status ?? EquipementStatus.DISPONIBLE,
       serialNumber: equipement?.serialNumber ?? '',
       imageUrl: equipement?.imageUrl ?? '',
+      quantity: equipement?.quantity ?? 1,
     },
   });
 
   useEffect(() => {
     findAllCategories()
-      .then(data => {
-        if (data) setCategories(data);
+      .then(res => {
+        if (res) setCategories(res);
       })
       .catch(() => { });
   }, []);
@@ -92,6 +94,7 @@ export default function EquipementForm({ equipement }: Props) {
         status: values.status,
         serialNumber: values.serialNumber,
         imageUrl: resolvedImageUrl,
+        quantity: Number(values.quantity),
       };
 
       if (isEdit) {
@@ -253,6 +256,20 @@ export default function EquipementForm({ equipement }: Props) {
             </div>
           </div>
 
+          {/* Quantité */}
+          <Input
+            id="quantity"
+            label="Quantité totale"
+            type="number"
+            placeholder="Ex: 10"
+            error={errors.quantity?.message}
+            {...register('quantity', {
+              required: 'La quantité est obligatoire',
+              min: { value: 1, message: 'Minimum 1' },
+              valueAsNumber: true,
+            })}
+          />
+
           {/* Upload Image */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -260,9 +277,8 @@ export default function EquipementForm({ equipement }: Props) {
             </label>
             <div
               onClick={() => fileInputRef.current?.click()}
-              className={`relative flex flex-col items-center justify-center gap-3 border-2 border-dashed rounded-2xl cursor-pointer transition-all hover:border-primary hover:bg-primary/5 ${
-                imagePreview ? 'h-52 border-primary/40' : 'h-36 border-gray-200'
-              }`}
+              className={`relative flex flex-col items-center justify-center gap-3 border-2 border-dashed rounded-2xl cursor-pointer transition-all hover:border-primary hover:bg-primary/5 ${imagePreview ? 'h-52 border-primary/40' : 'h-36 border-gray-200'
+                }`}
             >
               {imagePreview ? (
                 <>

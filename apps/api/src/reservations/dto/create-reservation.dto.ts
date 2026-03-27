@@ -11,4 +11,7 @@ export class CreateReservationDto {
   @IsNotEmpty()
   @IsDateString()
   endDate!: string;
+
+  @IsNotEmpty()
+  quantity!: number;
 }

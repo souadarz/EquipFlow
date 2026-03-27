@@ -59,8 +59,8 @@ export class ReservationService {
       );
     }
 
-    //verification du conflicts 
-    const conflict = await this.reservationModel.findOne({
+    // verification du conflicts et calcul de la quantité déjà réservée
+    const overlappingReservations = await this.reservationModel.find({
       equipement: new Types.ObjectId(createReservationDto.equipement),
       status: {
         $in: [ReservationStatus.ACTIVE, ReservationStatus.CONFIRME],
@@ -68,11 +68,16 @@ export class ReservationService {
       $or: [
         { startDate: { $lt: endDate }, endDate: { $gt: startDate } },
       ],
-    });
+    }).lean();
 
-    if (conflict) {
+    const usedQuantity = overlappingReservations.reduce((acc, res) => acc + (res.quantity || 1), 0);
+    const requestedQuantity = createReservationDto.quantity || 1;
+    const totalQuantity = equipement.quantity || 1;
+
+    if (usedQuantity + requestedQuantity > totalQuantity) {
+      const available = totalQuantity - usedQuantity;
       throw new ConflictException(
-        `Cet équipement est déjà réservé du ${conflict.startDate.toLocaleDateString()} au ${conflict.endDate.toLocaleDateString()}.`,
+        `Cet équipement n'a pas assez de stock pour ces dates. Restant: ${available > 0 ? available : 0}.`,
       );
     }
 
@@ -82,15 +87,17 @@ export class ReservationService {
       user: userObjectId,
       startDate,
       endDate,
+      quantity: requestedQuantity,
       status: ReservationStatus.ACTIVE,
     });
 
-    await this.equipementModel.findByIdAndUpdate(
-      createReservationDto.equipement,
-      {
-        status: EquipementStatus.RESERVE,
-      },
-    );
+    // Optionnel : Mettre à jour le statut seulement si tout est réservé
+    if (usedQuantity + requestedQuantity === totalQuantity) {
+      await this.equipementModel.findByIdAndUpdate(
+        createReservationDto.equipement,
+        { status: EquipementStatus.RESERVE },
+      );
+    }
 
     return reservation;
   }
@@ -197,7 +204,7 @@ export class ReservationService {
     if (CLOSED_STATUSES.includes(reservation.status)) {
       throw new ConflictException(
         `Impossible de modifier une réservation "${reservation.status}".`,
-        
+
       );
     }
 
@@ -208,9 +215,9 @@ export class ReservationService {
       .lean()
       .exec();
 
-      if(!updated){
-        throw new NotFoundException("reservation non trouvée")
-      }
+    if (!updated) {
+      throw new NotFoundException("reservation non trouvée")
+    }
 
     if (updateReservationDto.status && CLOSED_STATUSES.includes(updateReservationDto.status)) {
       await this.equipementModel.findByIdAndUpdate(

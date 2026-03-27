@@ -16,6 +16,7 @@ export default function ReservationModal({ equipement, onClose }: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [quantity, setQuantity] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [bookedRanges, setBookedRanges] = useState<{ start: Date; end: Date }[]>([]);
@@ -58,6 +59,7 @@ export default function ReservationModal({ equipement, onClose }: Props) {
         equipement: equipement._id,
         startDate,
         endDate,
+        quantity,
       });
       onClose();
     } catch (err: any) {
@@ -107,6 +109,29 @@ export default function ReservationModal({ equipement, onClose }: Props) {
               setError(null);
             }}
           />
+
+          {/* Quantité */}
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-gray-700">
+              Quantité à réserver
+              <span className="text-xs font-normal text-textgray ml-2">
+                (Max disponible: {equipement.quantity})
+              </span>
+            </label>
+            <div className="flex items-center gap-4">
+              <input
+                type="range"
+                min="1"
+                max={equipement.quantity}
+                value={quantity}
+                onChange={(e) => setQuantity(parseInt(e.target.value))}
+                className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary"
+              />
+              <div className="w-12 h-10 flex items-center justify-center bg-gray-50 border-2 border-gray-100 rounded-xl font-bold text-gray-900">
+                {quantity}
+              </div>
+            </div>
+          </div>
 
           {/* Erreur */}
           {error && (

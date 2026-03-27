@@ -30,4 +30,7 @@ export class CreateEquipementDto {
   @IsOptional()
   @IsString()
   imageUrl?: string;
+
+  @IsOptional()
+  quantity?: number;
 }
