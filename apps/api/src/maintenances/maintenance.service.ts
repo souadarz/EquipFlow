@@ -69,8 +69,13 @@ export class MaintenanceService {
     return maintenance;
   }
 
-  findAll() {
-    return `This action returns all maintenance`;
+  async findAll(): Promise<Maintenance[]> {
+    return this.maintenanceModel
+      .find()
+      .populate('equipement', 'name status')
+      .sort({ createdAt: -1 })
+      .lean()
+      .exec();
   }
 
   async findOne(id: Types.ObjectId): Promise<Maintenance> {
@@ -91,7 +96,7 @@ export class MaintenanceService {
     return 'This action updates a maintenance';
   }
 
-// close maintenance
+  // close maintenance
   async close(
     id: Types.ObjectId,
     closeMaintenanceDto: CloseMaintenanceDto,
@@ -125,9 +130,9 @@ export class MaintenanceService {
       .lean()
       .exec();
 
-      if(!updated){
-        throw new NotFoundException("maintenance non trouvée")
-      }
+    if (!updated) {
+      throw new NotFoundException("maintenance non trouvée")
+    }
 
     // Remettre l'équipement disponible
     await this.equipementModel.findByIdAndUpdate(

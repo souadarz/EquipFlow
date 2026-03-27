@@ -26,6 +26,9 @@ export class Reservation {
     default: ReservationStatus.ACTIVE,
   })
   status!: ReservationStatus;
+
+  @Prop({ default: 1, min: 1 })
+  quantity!: number;
 }
 
 export const ReservationSchema = SchemaFactory.createForClass(Reservation);

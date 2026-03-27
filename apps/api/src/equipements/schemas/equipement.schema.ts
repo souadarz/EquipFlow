@@ -28,6 +28,9 @@ export class Equipement {
 
   @Prop({ trim: true, default: '' })
   imageUrl?: string;
+
+  @Prop({ default: 1, min: 1 })
+  quantity!: number;
 }
 
 export const EquipementSchema = SchemaFactory.createForClass(Equipement);

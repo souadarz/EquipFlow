@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -21,6 +21,7 @@ interface FormValues {
   status: EquipementStatus;
   serialNumber: string;
   imageUrl: string;
+  quantity: number;
 }
 
 interface Props {
@@ -33,6 +34,16 @@ export default function EquipementForm({ equipement }: Props) {
   const router = useRouter();
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>(equipement?.imageUrl ?? '');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
 
   const {
     register,
@@ -46,13 +57,14 @@ export default function EquipementForm({ equipement }: Props) {
       status: equipement?.status ?? EquipementStatus.DISPONIBLE,
       serialNumber: equipement?.serialNumber ?? '',
       imageUrl: equipement?.imageUrl ?? '',
+      quantity: equipement?.quantity ?? 1,
     },
   });
 
   useEffect(() => {
     findAllCategories()
-      .then(data => {
-        if (data) setCategories(data);
+      .then(res => {
+        if (res) setCategories(res);
       })
       .catch(() => { });
   }, []);
@@ -60,13 +72,29 @@ export default function EquipementForm({ equipement }: Props) {
   const onSubmit = async (values: FormValues) => {
     setServerError(null);
     try {
+      let resolvedImageUrl = values.imageUrl || undefined;
+
+      // Si un fichier est sélectionné, on l'uploade d'abord
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'}/equipements/upload-image`,
+          { method: 'POST', body: formData, credentials: 'include' }
+        );
+        if (!res.ok) throw new Error('Échec de l upload de l image');
+        const data = await res.json();
+        resolvedImageUrl = `${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'}${data.url}`;
+      }
+
       const payload: IEquipementPayload = {
         name: values.name,
         description: values.description,
         category: values.category,
         status: values.status,
         serialNumber: values.serialNumber,
-        imageUrl: values.imageUrl || undefined,
+        imageUrl: resolvedImageUrl,
+        quantity: Number(values.quantity),
       };
 
       if (isEdit) {
@@ -219,35 +247,69 @@ export default function EquipementForm({ equipement }: Props) {
                 {...register('status')}
               >
                 <option value={EquipementStatus.DISPONIBLE}>
-                  🟢 Disponible
+                  Disponible
                 </option>
                 <option value={EquipementStatus.HORS_SERVICE}>
-                  🔴 Hors service
+                  Hors service
                 </option>
               </select>
             </div>
           </div>
 
-          {/* serialNumber */}
+          {/* Quantité */}
           <Input
-            id="serialNumber"
-            label="Numéro de série"
-            placeholder="Ex: SN-2024-001, DELL-XPS-0042..."
-            error={errors.serialNumber?.message}
-            helperText="Numéro de série physique de l'équipement"
-            {...register('serialNumber', {
-              required: 'Le numéro de série est obligatoire',
+            id="quantity"
+            label="Quantité totale"
+            type="number"
+            placeholder="Ex: 10"
+            error={errors.quantity?.message}
+            {...register('quantity', {
+              required: 'La quantité est obligatoire',
+              min: { value: 1, message: 'Minimum 1' },
+              valueAsNumber: true,
             })}
           />
 
-          {/* URL Image */}
-          <Input
-            id="imageUrl"
-            label="URL de l'image (Optionnel)"
-            placeholder="Ex: https://example.com/image.jpg"
-            error={errors.imageUrl?.message}
-            {...register('imageUrl')}
-          />
+          {/* Upload Image */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Image (Optionnel)
+            </label>
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className={`relative flex flex-col items-center justify-center gap-3 border-2 border-dashed rounded-2xl cursor-pointer transition-all hover:border-primary hover:bg-primary/5 ${imagePreview ? 'h-52 border-primary/40' : 'h-36 border-gray-200'
+                }`}
+            >
+              {imagePreview ? (
+                <>
+                  <img
+                    src={imagePreview}
+                    alt="Aperçu"
+                    className="absolute inset-0 w-full h-full object-cover rounded-2xl opacity-80"
+                  />
+                  <div className="relative z-10 bg-black/50 text-white text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm flex items-center gap-1">
+                    <span className="material-icons" style={{ fontSize: '14px' }}>edit</span>
+                    Changer l&apos;image
+                  </div>
+                </>
+              ) : (
+                <>
+                  <span className="material-icons text-gray-300" style={{ fontSize: '40px' }}>add_photo_alternate</span>
+                  <p className="text-sm text-textgray font-medium">
+                    Cliquez pour sélectionner une image
+                  </p>
+                  <p className="text-xs text-gray-400">JPG, PNG, WEBP — max 5 Mo</p>
+                </>
+              )}
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+          </div>
 
           {/* Boutons */}
           <div className="flex gap-3 pt-2">

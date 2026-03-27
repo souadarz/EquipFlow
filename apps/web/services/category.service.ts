@@ -1,9 +1,9 @@
 import api from '@/lib/axios';
-import { ICategory, ICategoryPayload, IPaginatedResponse } from '@repo/shared';
+import { ICategory, ICategoryPayload } from '@repo/shared';
 
 export async function findAllCategories() {
   try {
-    const response = await api.get<IPaginatedResponse<ICategory>>('/categories');
+    const response = await api.get<Promise<ICategory[]>>('/categories');
   
     console.log("response", response.data);
     return response.data;

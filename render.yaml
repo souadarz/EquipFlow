@@ -1,0 +1,29 @@
+services:
+  # L'API (Backend)
+  - type: web
+    name: equipflow-api
+    plan: free
+    runtime: node
+    buildCommand: pnpm install && pnpm turbo run build --filter=api
+    startCommand: pnpm --filter=api start:prod
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: MONGODB_URI
+        fromValue: YOUR_MONGODB_ATLAS_URI
+
+  # Le Web (Frontend)
+  - type: web
+    name: equipflow-web
+    plan: free
+    runtime: node
+    buildCommand: pnpm install && pnpm turbo run build --filter=web
+    startCommand: pnpm --filter=web start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: equipflow-api
+          property: host

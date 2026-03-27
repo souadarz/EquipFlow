@@ -51,7 +51,13 @@ export class EquipementService {
 
     if (status) filter.status = status;
     if (category) filter.category = new Types.ObjectId(category);
-    if (search) filter.$text = { $search: search };
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+        { serialNumber: { $regex: search, $options: 'i' } },
+      ];
+    }
 
     const skip = (page - 1) * limit;
     const total = await this.equipementModel.countDocuments(filter);

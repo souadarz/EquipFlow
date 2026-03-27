@@ -10,6 +10,7 @@ export interface IEquipement {
   category: ICategory;
   createdAt: string;
   imageUrl?: string;
+  quantity: number;
 }
 
 export interface IEquipementPayload {
@@ -19,6 +20,7 @@ export interface IEquipementPayload {
   serialNumber: string;
   category: string;
   imageUrl?: string;
+  quantity?: number;
 }
 
 export interface IEquipementQuery {

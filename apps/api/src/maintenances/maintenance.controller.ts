@@ -16,7 +16,7 @@ import { RolesGuard } from 'src/common/guards/role.guard';
 
 
 export class MaintenanceController {
-  constructor(private readonly maintenanceService: MaintenanceService) {}
+  constructor(private readonly maintenanceService: MaintenanceService) { }
 
   @Post()
   create(@Body() createMaintenanceDto: CreateMaintenanceDto) {
@@ -38,11 +38,11 @@ export class MaintenanceController {
     return this.maintenanceService.update(id, updateMaintenanceDto);
   }
 
-  @Patch(':id')
+  @Patch(':id/close')
   close(@Param('id', ParseObjectIdPipe) id: Types.ObjectId, @Body() closeMaintenanceDto: CloseMaintenanceDto) {
-    return this.maintenanceService.update(id, closeMaintenanceDto);
+    return this.maintenanceService.close(id, closeMaintenanceDto);
   }
-  
+
   @Delete(':id')
   remove(@Param('id', ParseObjectIdPipe) id: Types.ObjectId) {
     return this.maintenanceService.remove(id);

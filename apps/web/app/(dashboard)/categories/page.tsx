@@ -32,6 +32,7 @@ export default function CategoriesPage() {
     const load = async () => {
         setLoading(true);
         const data = await findAllCategories();
+        console.log("dataaaaaaaa =", data);
         if (data) setCategories(data);
         setLoading(false);
     };

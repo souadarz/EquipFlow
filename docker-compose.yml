@@ -1,0 +1,59 @@
+services:
+  # Base de données MongoDB
+  mongodb:
+    image: mongo:latest
+    container_name: equipflow-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - equipflow-network
+
+  # Backend NestJS
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: equipflow-api
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      # Mettre à jour avec l'URL de connexion MongoDB interne au réseau Docker
+      - MONGODB_URI=mongodb://mongodb:27017/equipflow
+      - JWT_SECRET=votre_secret_jwt_tres_securise
+    depends_on:
+      - mongodb
+    networks:
+      - equipflow-network
+
+  # Frontend Next.js
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:3001
+    container_name: equipflow-web
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      # L'URL du backend pour le frontend (exposée sur le host)
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
+    depends_on:
+      - api
+    networks:
+      - equipflow-network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  equipflow-network:
+    driver: bridge
