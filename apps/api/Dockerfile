@@ -3,6 +3,7 @@ FROM node:20-alpine AS base
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+RUN corepack enable
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # ---- BUILDER ----
@@ -30,7 +31,7 @@ COPY --from=builder /app/out/full/ .
 RUN pnpm turbo run build --filter=api...
 
 # ---- RUNNER ----
-FROM node:20-alpine AS runner
+FROM base AS runner
 WORKDIR /app
 
 RUN addgroup --system --gid 1001 nodejs

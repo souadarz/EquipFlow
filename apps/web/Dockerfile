@@ -3,6 +3,7 @@ FROM node:20-alpine AS base
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+RUN corepack enable
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # ---- BUILDER ----
@@ -33,7 +34,7 @@ ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 RUN pnpm turbo run build --filter=web...
 
 # ---- RUNNER ----
-FROM node:20-alpine AS runner
+FROM base AS runner
 WORKDIR /app
 
 RUN addgroup --system --gid 1001 nodejs
@@ -45,4 +46,5 @@ COPY --from=installer /app .
 EXPOSE 3000
 ENV PORT=3000
 
-CMD ["pnpm", "run", "start", "--filter=web"]
+# CMD ["pnpm", "run", "start", "--filter=web"]
+CMD ["pnpm", "--filter", "web", "start"]
