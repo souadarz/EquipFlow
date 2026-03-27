@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import EquipementStatusBadge from '@/components/ui/EquipementStatusBadge';
-import { categoryIcon, categoryBg } from '@/lib/quipement.utils';
+import { categoryIcon, categoryBg, getImageUrl } from '@/lib/quipement.utils';
 import { EquipementStatus } from '@repo/shared';
 import type { IEquipement } from '@repo/shared';
 
@@ -22,6 +22,7 @@ export default function EquipementCard({
   onDelete,
 }: Props) {
   const reservable = equipement.status === EquipementStatus.DISPONIBLE;
+  const imageUrl = getImageUrl(equipement.imageUrl);
   const detailHref = variant === 'public'
     ? `/equipement/${equipement._id}`
     : `/equipements/${equipement._id}`;
@@ -34,11 +35,11 @@ export default function EquipementCard({
       {/* Visuel */}
       <Link href={detailHref} className="block w-full overflow-hidden">
         <div className={`h-44 w-full flex items-center justify-center overflow-hidden
-          ${!equipement.imageUrl ? categoryBg(equipement.category?.name) : 'bg-gray-100'}`}
+          ${!imageUrl ? categoryBg(equipement.category?.name) : 'bg-gray-100'}`}
         >
-          {equipement.imageUrl ? (
+          {imageUrl ? (
             <img
-              src={equipement.imageUrl}
+              src={imageUrl}
               alt={equipement.name}
               className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
             />

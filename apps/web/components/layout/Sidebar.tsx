@@ -17,7 +17,6 @@ const adminLinks = [
     { href: '/reservations', icon: 'event', label: 'Réservations' },
     { href: '/maintenance', icon: 'build', label: 'Maintenance' },
     { href: '/categories', icon: 'category', label: 'Catégories' },
-    { href: '/users', icon: 'people', label: 'Utilisateurs' },
 ];
 
 function SidebarLink({

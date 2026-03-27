@@ -13,6 +13,7 @@ import type {
   ICategory,
   IEquipementPayload,
 } from '@repo/shared';
+import { getImageUrl } from '@/lib/quipement.utils';
 
 interface FormValues {
   name: string;
@@ -35,7 +36,7 @@ export default function EquipementForm({ equipement }: Props) {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [serverError, setServerError] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>(equipement?.imageUrl ?? '');
+  const [imagePreview, setImagePreview] = useState<string>(getImageUrl(equipement?.imageUrl) ?? '');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

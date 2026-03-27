@@ -11,6 +11,7 @@ import { EquipementStatus } from '@repo/shared';
 import type { IEquipement } from '@repo/shared';
 import { findOneEquipement } from '@/services/equipement.service';
 import EquipementCalendar from '@/components/equipements/EquipementCalendar';
+import { getImageUrl } from '@/lib/quipement.utils';
 
 export default function EquipementDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -50,6 +51,7 @@ export default function EquipementDetailPage() {
   if (!equipement) return null;
 
   const reservable = equipement.status === EquipementStatus.DISPONIBLE;
+  const imageUrl = getImageUrl(equipement.imageUrl);
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in zoom-in-95 duration-500 pb-16">
@@ -68,9 +70,9 @@ export default function EquipementDetailPage() {
         {/*image*/}
         <div className="lg:col-span-7 space-y-6">
           <div className="relative bg-gray-50 rounded-3xl overflow-hidden border border-gray-200 shadow-sm group min-h-[400px] flex items-center justify-center">
-            {equipement.imageUrl ? (
+            {imageUrl ? (
               <img
-                src={equipement.imageUrl}
+                src={imageUrl}
                 alt={equipement.name}
                 className="w-full h-full object-cover absolute inset-0 transition-transform duration-700 group-hover:scale-105"
               />
@@ -137,9 +139,6 @@ export default function EquipementDetailPage() {
                   </div>
                 ) : (
                   <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-600 shadow-inner">
-                      <span className="material-icons" style={{ fontSize: '32px' }}>front_hand</span>
-                    </div>
                     <div>
                       <p className="font-extrabold text-gray-900 text-lg">Indisponible</p>
                       <p className="text-amber-600 font-semibold text-sm">Actuellement {equipement.status.replace('_', ' ').toLowerCase()}</p>
@@ -193,14 +192,6 @@ export default function EquipementDetailPage() {
                       <span className="material-icons" style={{ fontSize: '18px' }}>edit</span>
                       Modifier
                     </Link>
-                    <button
-                      className="w-full py-3.5 rounded-2xl font-bold flex items-center justify-center
-                        gap-2 text-sm bg-white border-2 border-red-50 text-red-600 hover:bg-red-50
-                        transition-all hover:-translate-y-0.5"
-                    >
-                      <span className="material-icons" style={{ fontSize: '18px' }}>delete</span>
-                      Supprimer
-                    </button>
                   </div>
                 )}
               </div>

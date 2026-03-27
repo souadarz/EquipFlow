@@ -5,6 +5,5 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// No interceptor needed for session cookies with withCredentials: true
 
 export default api;

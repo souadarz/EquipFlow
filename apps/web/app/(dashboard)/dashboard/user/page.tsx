@@ -8,14 +8,18 @@ import Spinner from '@/components/ui/Spinner';
 import StatCard from '@/components/ui/StatCard';
 import ReservationStatusBadge from '@/components/ui/ReservationStatusBadge';
 import { ReservationStatus } from '@repo/shared';
+import { useEquipement } from '@/hooks/useEquipement';
 
 export default function UserDashboardPage() {
   const { user } = useAuth();
   const { reservations, loading, fetchAll } = useReservation();
-
+  const { equipements, loading: loadingEquip, fetchAll: fetchEquipements} = useEquipement()
   useEffect(() => {
     fetchAll({ limit: 5 });
+    fetchEquipements();
   }, []);
+
+  const totalEquipement = equipements?.meta.total ?? 0;
 
   const firstName = user?.fullname.split(' ')[0] ?? 'vous';
 
@@ -52,7 +56,7 @@ export default function UserDashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         <StatCard
           label="Équipements disponibles"
-          value={loading ? '...' : '24'}
+          value={String(totalEquipement)}
           delta="↑ 3 ajoutés cette semaine"
           deltaType="success"
           icon="check_circle"
@@ -79,7 +83,6 @@ export default function UserDashboardPage() {
         />
       </div>
 
-      {/* CTA */}
       <div
         className="rounded-2xl p-6 flex items-center justify-between"
         style={{ background: 'linear-gradient(135deg,#274c77,#6096ba)' }}

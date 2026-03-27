@@ -22,8 +22,8 @@ export default function RegisterPage() {
                     </p>
                     <div className="grid gap-4">
                         {[
-                            { icon: '🎯', title: 'Déploiement immédiat', sub: 'Compte actif en moins d\'une minute' },
-                            { icon: '🔒', title: 'Données sécurisées', sub: 'Chiffrement JWT + cookies httpOnly' },
+                            { icon: '', title: 'Déploiement immédiat', sub: 'Compte actif en moins d\'une minute' },
+                            { icon: '', title: 'Données sécurisées', sub: 'Chiffrement JWT + cookies httpOnly' },
                         ].map((item, i) => (
                             <div key={i} className="p-4 bg-white/5 rounded-xl border border-white/10">
                                 <div className="font-bold text-white mb-1">{item.icon} {item.title}</div>

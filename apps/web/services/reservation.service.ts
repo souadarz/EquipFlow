@@ -13,6 +13,8 @@ export async function findAllReservations(query?: IReservationQuery) {
     const response = await api.get<IPaginatedResponse<IReservation>>('/reservations', {
       params: query,
     });
+    console.log("reservations", response.data);
+    
     return response.data;
   } catch (error) {
     console.error('Error fetching reservations:', error);

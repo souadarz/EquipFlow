@@ -23,11 +23,11 @@ import { Types } from 'mongoose';
 import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
 
 @Controller('reservations')
-@UseGuards(JwtAuthGuard)
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) { }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   create(
     @Body() createReservationDto: CreateReservationDto,
     @CurrentUser() user: AuthUser) {
@@ -35,18 +35,20 @@ export class ReservationController {
   }
 
   @Get()
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @Roles(Role.ADMIN)
   findAll(@Query() query: QueryReservationDto, @CurrentUser() user: AuthUser) {
     return this.reservationService.findAll(query, user);
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   findOne(@Param('id', ParseObjectIdPipe) id: Types.ObjectId, @CurrentUser() user: AuthUser) {
     return this.reservationService.findOne(id, user);
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   update(@Param('id', ParseObjectIdPipe) id: Types.ObjectId,
     @Body() updateReservationDto: UpdateReservationDto,
     @CurrentUser() user: AuthUser,
@@ -55,7 +57,7 @@ export class ReservationController {
   }
 
   @Delete(':id')
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   remove(@Param('id', ParseObjectIdPipe) id: Types.ObjectId) {
     return this.reservationService.remove(id);

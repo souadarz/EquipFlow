@@ -13,6 +13,7 @@ import { findOneEquipement } from '@/services/equipement.service';
 import Footer from '@/components/layout/Footer';
 import { ReservationProvider } from '@/context/ReservationContext';
 import EquipementCalendar from '@/components/equipements/EquipementCalendar';
+import { getImageUrl } from '@/lib/quipement.utils';
 
 export default function PublicEquipementDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -52,6 +53,7 @@ export default function PublicEquipementDetailPage() {
     if (!equipement) return null;
 
     const reservable = equipement.status === EquipementStatus.DISPONIBLE;
+    const imageUrl = getImageUrl(equipement.imageUrl);
 
     const handleReserveClick = () => {
         if (!user) {
@@ -95,9 +97,9 @@ export default function PublicEquipementDetailPage() {
                         {/* Colonne Gauche - Image Hero (Span 7) */}
                         <div className="lg:col-span-7 space-y-6">
                             <div className="relative bg-gray-50 rounded-3xl overflow-hidden border border-gray-200 shadow-sm group min-h-[400px] flex items-center justify-center">
-                                {equipement.imageUrl ? (
+                                {imageUrl ? (
                                     <img
-                                        src={equipement.imageUrl}
+                                        src={imageUrl}
                                         alt={equipement.name}
                                         className="w-full h-full object-cover absolute inset-0 transition-transform duration-700 group-hover:scale-105"
                                     />
@@ -164,9 +166,6 @@ export default function PublicEquipementDetailPage() {
                                             </div>
                                         ) : (
                                             <div className="flex items-center gap-4">
-                                                <div className="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-600 shadow-inner">
-                                                    <span className="material-icons" style={{ fontSize: '32px' }}>front_hand</span>
-                                                </div>
                                                 <div>
                                                     <p className="font-extrabold text-gray-900 text-lg">Indisponible</p>
                                                     <p className="text-amber-600 font-semibold text-sm">Actuellement {equipement.status.replace('_', ' ').toLowerCase()}</p>
@@ -205,7 +204,7 @@ export default function PublicEquipementDetailPage() {
 
                 {/* Calendrier de disponibilité */}
                 <div className="max-w-6xl mx-auto w-full px-6 pb-8">
-                  <EquipementCalendar equipementId={equipement._id} />
+                    <EquipementCalendar equipementId={equipement._id} />
                 </div>
 
                 <Footer />
