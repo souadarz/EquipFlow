@@ -28,7 +28,7 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
-      domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined,
+      path: '/',
       maxAge: 1000 * 60 * 60 * 2,
     });
 
@@ -46,7 +46,7 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
-      domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined,
+      path: '/',
     });
     return { message: 'Déconnecté' };
   }
