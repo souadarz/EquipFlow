@@ -63,10 +63,11 @@ export default function ReservationsPage() {
                         text-sm bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
                 >
                     <option value="">Tous les statuts</option>
-                    <option value={ReservationStatus.ACTIVE}>Active</option>
+                    <option value={ReservationStatus.ATTENTE}>En attente</option>
                     <option value={ReservationStatus.CONFIRME}>Confirmée</option>
+                    <option value={ReservationStatus.ACTIVE}>Active</option>
                     <option value={ReservationStatus.ANNULE}>Annulée</option>
-                    <option value={ReservationStatus.COMPLETE}>Complète</option>
+                    <option value={ReservationStatus.COMPLETE}>Complétée</option>
                 </select>
             </div>
 
@@ -133,9 +134,9 @@ export default function ReservationsPage() {
                                         <td className="px-6 py-4">
                                             <ReservationStatusBadge status={res.status} />
                                         </td>
-                                        {isAdmin && (
+                                        {isAdmin ? (
                                             <td className="px-6 py-4 text-right space-x-2">
-                                                {res.status === ReservationStatus.ACTIVE && (
+                                                {res.status === ReservationStatus.ATTENTE && (
                                                     <>
                                                         <button
                                                             onClick={() => handleUpdateStatus(res._id, ReservationStatus.CONFIRME)}
@@ -151,16 +152,29 @@ export default function ReservationsPage() {
                                                         </button>
                                                     </>
                                                 )}
-                                                {res.status === ReservationStatus.CONFIRME && (
+                                                {(res.status === ReservationStatus.CONFIRME || res.status === ReservationStatus.ACTIVE) && (
                                                     <button
                                                         onClick={() => handleUpdateStatus(res._id, ReservationStatus.COMPLETE)}
                                                         className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors"
                                                     >
-                                                        Marquer comme Complet
+                                                        Terminer
                                                     </button>
                                                 )}
                                                 {(res.status === ReservationStatus.ANNULE || res.status === ReservationStatus.COMPLETE) && (
                                                     <span className="text-xs text-textgray italic">Aucune action</span>
+                                                )}
+                                            </td>
+                                        ) : (
+                                            <td className="px-6 py-4 text-right">
+                                                {res.status === ReservationStatus.ATTENTE ? (
+                                                    <button
+                                                        onClick={() => handleUpdateStatus(res._id, ReservationStatus.ANNULE)}
+                                                        className="text-xs font-bold text-red-600 bg-red-50 px-3 py-1.5 rounded-lg hover:bg-red-100 transition-colors"
+                                                    >
+                                                        Annuler ma demande
+                                                    </button>
+                                                ) : (
+                                                    <span className="text-xs text-textgray italic">Action restreinte</span>
                                                 )}
                                             </td>
                                         )}
