@@ -74,6 +74,7 @@ describe('AuthController', () => {
         httpOnly: true,
         secure: false,
         sameSite: 'lax',
+        path: '/',
         maxAge: 1000 * 60 * 60 * 2,
       });
 
@@ -136,6 +137,7 @@ describe('AuthController', () => {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
+        path: '/',
       });
 
       expect(result).toEqual({ message: 'Déconnecté' });
@@ -151,7 +153,8 @@ describe('AuthController', () => {
       expect(res.clearCookie).toHaveBeenCalledWith('token', {
         httpOnly: true,
         secure: true,
-        sameSite: 'lax',
+        sameSite: 'none',
+        path: '/',
       });
 
       process.env.NODE_ENV = originalEnv;

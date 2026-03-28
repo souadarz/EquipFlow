@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useEquipement } from '@/hooks/useEquipement';
 import { useMaintenance } from '@/hooks/useMaintenance';
-import { IEquipement } from '@repo/shared';
+import { IEquipement, EquipementStatus } from '@repo/shared';
 
 export default function MaintenanceForm() {
     const { equipements, fetchAll: fetchEquipements } = useEquipement();
@@ -18,6 +18,8 @@ export default function MaintenanceForm() {
     useEffect(() => {
         fetchEquipements();
     }, [fetchEquipements]);
+
+    const availableEquipements = equipements?.data.filter(eq => eq.status === EquipementStatus.DISPONIBLE) ?? [];
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -97,7 +99,7 @@ export default function MaintenanceForm() {
                             required
                         >
                             <option value="">Choisir un équipement...</option>
-                            {equipements?.data.map((eq: IEquipement) => (
+                            {availableEquipements.map((eq: IEquipement) => (
                                 <option key={eq._id} value={eq._id}>
                                     {eq.name} ({eq.serialNumber})
                                 </option>

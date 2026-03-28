@@ -90,22 +90,6 @@ export default function MaintenancePage() {
                             ))}
                         </div>
                     )}
-
-                    {/* Alerte urgente - Bottom */}
-                    <div className="mt-10 p-5 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-5 shadow-sm">
-                        <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-red-500">
-                            <span className="material-icons" style={{ fontSize: '24px' }}>priority_high</span>
-                        </div>
-                        <div className="flex-1">
-                            <p className="text-[10px] font-black text-red-600 uppercase tracking-widest mb-0.5">Alerte Urgente</p>
-                            <p className="text-sm font-medium text-red-900">
-                                Presse hydraulique hors ligne. <span className="font-bold">La maintenance prévue est en retard de 48 heures.</span>
-                            </p>
-                        </div>
-                        <button className="px-5 py-2.5 bg-red-500 hover:bg-red-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-red-500/20 active:scale-95">
-                            Ré-assigner
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>

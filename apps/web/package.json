@@ -13,6 +13,7 @@
     "@repo/shared": "workspace:*",
     "@types/react-big-calendar": "^1.16.3",
     "axios": "^1.13.6",
+    "date-fns": "^4.1.0",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.3",
     "moment": "^2.30.1",

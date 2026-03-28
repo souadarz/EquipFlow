@@ -63,7 +63,7 @@ export class ReservationService {
     const overlappingReservations = await this.reservationModel.find({
       equipement: new Types.ObjectId(createReservationDto.equipement),
       status: {
-        $in: [ReservationStatus.ACTIVE, ReservationStatus.CONFIRME],
+        $in: [ReservationStatus.ACTIVE, ReservationStatus.CONFIRME, ReservationStatus.ATTENTE],
       },
       $or: [
         { startDate: { $lt: endDate }, endDate: { $gt: startDate } },
@@ -88,7 +88,7 @@ export class ReservationService {
       startDate,
       endDate,
       quantity: requestedQuantity,
-      status: ReservationStatus.ACTIVE,
+      status: ReservationStatus.ATTENTE,
     });
 
     // Optionnel : Mettre à jour le statut seulement si tout est réservé
@@ -136,12 +136,18 @@ export class ReservationService {
       .sort({ startDate: -1 })
       .skip(skip)
       .limit(limit)
-      .lean();
+      .lean()
+      .exec();
+
+    // Synchronisation automatique des statuts (CONFIRME -> ACTIVE)
+    const syncedData = await Promise.all(
+      (data as any[]).map(r => this.syncStatus(r))
+    );
 
     const total = await this.reservationModel.countDocuments(filter);
 
     return {
-      data,
+      data: syncedData,
       meta: {
         total,
         page,
@@ -169,7 +175,7 @@ export class ReservationService {
     // Un user ne peut voir que ses propres réservations
     this.assertOwnerOrAdmin(reservation.user._id, currentUser);
 
-    return reservation;
+    return this.syncStatus(reservation);
   }
 
   // update reservation
@@ -187,13 +193,19 @@ export class ReservationService {
     // Seul le propriétaire ou un admin peut modifier
     this.assertOwnerOrAdmin(reservation.user, currentUser);
 
-    // Un user ne peut qu'annuler sa réservation
-    if (
-      currentUser.role === Role.USER &&
-      updateReservationDto.status !== ReservationStatus.ANNULE
-    ) {
+    // REGLE DE DESISTEMENT: Seule une réservation en ATTENTE peut être annulée
+    if (updateReservationDto.status === ReservationStatus.ANNULE) {
+      if (reservation.status !== ReservationStatus.ATTENTE) {
+        throw new ForbiddenException(
+          `Impossible d'annuler une réservation qui est déjà "${reservation.status}". Seules les réservations "En attente" peuvent être annulées.`,
+        );
+      }
+    }
+
+    // Le user ne peut RIEN faire d'autre que l'annulation (qu'on a géré au-dessus)
+    if (currentUser.role === Role.USER && updateReservationDto.status !== ReservationStatus.ANNULE) {
       throw new ForbiddenException(
-        'Vous pouvez uniquement annuler votre réservation.',
+        'En tant qu\'utilisateur, vous pouvez uniquement annuler votre réservation.',
       );
     }
 
@@ -204,7 +216,6 @@ export class ReservationService {
     if (CLOSED_STATUSES.includes(reservation.status)) {
       throw new ConflictException(
         `Impossible de modifier une réservation "${reservation.status}".`,
-
       );
     }
 
@@ -246,6 +257,23 @@ export class ReservationService {
     }
 
     await this.reservationModel.findByIdAndDelete(id);
+  }
+
+  private async syncStatus(reservation: any): Promise<any> {
+    if (!reservation) return reservation;
+
+    const now = new Date();
+    const startDate = new Date(reservation.startDate);
+
+    // Si confirmée et date de début atteinte -> ACTIVE
+    if (reservation.status === ReservationStatus.CONFIRME && startDate <= now) {
+      await this.reservationModel.findByIdAndUpdate(reservation._id, {
+        status: ReservationStatus.ACTIVE,
+      });
+      reservation.status = ReservationStatus.ACTIVE;
+    }
+
+    return reservation;
   }
 
   private assertOwnerOrAdmin(

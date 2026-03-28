@@ -12,12 +12,22 @@ async function bootstrap() {
   app.use(cookieParser());
 
   const isProduction = process.env.NODE_ENV === 'production';
-  const allowedOrigins = isProduction
-    ? ['https://equipflow-web.onrender.com']
-    : ['http://localhost:3000', 'http://localhost:3001'];
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:4000',
+    'http://localhost:4001',
+    'https://equipflow-web.onrender.com'
+  ];
 
   app.enableCors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   });
 

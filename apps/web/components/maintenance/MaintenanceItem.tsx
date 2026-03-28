@@ -15,7 +15,13 @@ export default function MaintenanceItem({ maintenance }: Props) {
     const { equipement, startDate, endDate, _id } = maintenance;
 
     const isClosed = !!endDate;
-    const elapsed = formatDistanceToNow(new Date(startDate), { locale: fr });
+
+    // Guard for invalid date
+    const startObj = new Date(startDate);
+    const isValidDate = !isNaN(startObj.getTime());
+    const elapsed = isValidDate
+        ? formatDistanceToNow(startObj, { locale: fr })
+        : 'Date inconnue';
 
     const handleClose = async () => {
         if (!confirm('Voulez-vous clôturer cette maintenance ? L\'équipement redeviendra disponible.')) return;
@@ -88,8 +94,13 @@ export default function MaintenanceItem({ maintenance }: Props) {
                         <div className="flex items-center gap-4 mt-3">
                             <div className="flex items-center gap-1.5 text-xs text-textgray font-medium">
                                 <span className="material-icons text-gray-300" style={{ fontSize: '16px' }}>calendar_month</span>
-                                {new Date(startDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })}
-                                {endDate && ` - ${new Date(endDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })}`}
+                                {isValidDate
+                                    ? startObj.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })
+                                    : '—'
+                                }
+                                {endDate && !isNaN(new Date(endDate).getTime()) && (
+                                    ` - ${new Date(endDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })}`
+                                )}
                             </div>
                             {!isClosed && (
                                 <div className="flex items-center gap-1.5 text-xs text-textgray font-medium">
