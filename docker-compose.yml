@@ -5,7 +5,7 @@ services:
     container_name: equipflow-mongodb
     restart: always
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - mongodb_data:/data/db
     networks:
@@ -19,7 +19,7 @@ services:
     container_name: equipflow-api
     restart: always
     ports:
-      - "3001:3001"
+      - "4001:3001"
     environment:
       - NODE_ENV=production
       # Mettre à jour avec l'URL de connexion MongoDB interne au réseau Docker
@@ -36,15 +36,15 @@ services:
       context: .
       dockerfile: apps/web/Dockerfile
       args:
-        - NEXT_PUBLIC_API_URL=http://localhost:3001
+        - NEXT_PUBLIC_API_URL=http://localhost:4001
     container_name: equipflow-web
     restart: always
     ports:
-      - "3000:3000"
+      - "4000:3000"
     environment:
       - NODE_ENV=production
       # L'URL du backend pour le frontend (exposée sur le host)
-      - NEXT_PUBLIC_API_URL=http://localhost:3001
+      - NEXT_PUBLIC_API_URL=http://localhost:4001
     depends_on:
       - api
     networks:

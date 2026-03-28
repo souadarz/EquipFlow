@@ -42,7 +42,7 @@ export default function ReservationsPage() {
     };
 
     return (
-        <div className="max-w-7xl mx-auto space-y-6 lg:ml-64 p-6 lg:p-10 w-full" style={{ paddingLeft: 'var(--sidebar-width, 0px)' }}>
+        <div className="max-w-7xl mx-auto space-y-6 p-6 lg:p-10 w-full">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-extrabold text-gray-900">
