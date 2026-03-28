@@ -44,7 +44,7 @@ export function MaintenanceProvider({ children }: { children: ReactNode }) {
         } finally {
             setLoading(false);
         }
-    }, [handleError]);
+    }, []);
 
     const create = useCallback(async (payload: IMaintenancePayload) => {
         try {

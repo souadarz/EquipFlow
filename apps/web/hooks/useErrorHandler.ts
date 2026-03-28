@@ -1,8 +1,9 @@
+import { useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { AxiosError } from 'axios';
 
 export function useErrorHandler() {
-    return (error: unknown) => {
+    return useCallback((error: unknown) => {
         if (error instanceof AxiosError) {
             const message = error.response?.data?.message;
             if (Array.isArray(message)) {
@@ -13,5 +14,5 @@ export function useErrorHandler() {
         } else {
             toast.error('Une erreur inattendue est survenue');
         }
-    };
+    }, []);
 }
