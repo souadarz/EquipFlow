@@ -54,9 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   //login
   const login = async (email: string, password: string) => {
     const data = await loginService({ email, password });
-    if (data?.user) {
-      setUser(data.user);
-    }
+    setUser(data.user);
   };
 
   //register
@@ -66,9 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     password: string,
   ) => {
     const data = await registerService({ fullname, email, password });
-    if (data?.user) {
-      setUser(data.user);
-    }
+    setUser(data.user);
   };
 
   //logout

@@ -35,8 +35,8 @@ export class ReservationController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
-  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.USER)
   findAll(@Query() query: QueryReservationDto, @CurrentUser() user: AuthUser) {
     return this.reservationService.findAll(query, user);
   }

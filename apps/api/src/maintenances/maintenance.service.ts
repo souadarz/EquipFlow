@@ -72,7 +72,7 @@ export class MaintenanceService {
   async findAll(): Promise<Maintenance[]> {
     return this.maintenanceModel
       .find()
-      .populate('equipement', 'name status')
+      .populate('equipement', 'name status serialNumber imageUrl')
       .sort({ createdAt: -1 })
       .lean()
       .exec();
@@ -81,7 +81,7 @@ export class MaintenanceService {
   async findOne(id: Types.ObjectId): Promise<Maintenance> {
     const maintenance = await this.maintenanceModel
       .findById(id)
-      .populate('equipement', 'name status')
+      .populate('equipement', 'name status serialNumber imageUrl')
       .lean()
       .exec();
 

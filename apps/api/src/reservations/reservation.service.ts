@@ -112,7 +112,7 @@ export class ReservationService {
 
     // role
     if (currentUser.role === Role.USER) {
-      filter.user = currentUser.id;
+      filter.user = new Types.ObjectId(currentUser.id);
     } else if (user) {
       filter.user = new Types.ObjectId(user);
     }

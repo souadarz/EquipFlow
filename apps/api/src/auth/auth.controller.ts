@@ -24,10 +24,11 @@ export class AuthController {
       user as typeof user & { _id: string },
     );
 
+    const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('token', access_token, {
       httpOnly: true,
-      secure: true,
-      sameSite: 'none',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
       maxAge: 1000 * 60 * 60 * 2,
     });
@@ -42,10 +43,11 @@ export class AuthController {
 
   @Post('logout')
   logout(@Res({ passthrough: true }) res: Response) {
+    const isProduction = process.env.NODE_ENV === 'production';
     res.clearCookie('token', {
       httpOnly: true,
-      secure: true,
-      sameSite: 'none',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
     });
     return { message: 'Déconnecté' };

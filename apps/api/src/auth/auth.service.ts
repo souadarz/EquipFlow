@@ -14,7 +14,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async validateUser(
     email: string,
@@ -22,11 +22,13 @@ export class AuthService {
   ): Promise<Omit<User, 'password'>> {
     const user = await this.usersService.findOne(email);
     if (!user) {
+      console.log(`[Auth] User not found: ${email}`);
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
+      console.log(`[Auth] Invalid password for user: ${email}`);
       throw new UnauthorizedException('Invalid credentials');
     }
 

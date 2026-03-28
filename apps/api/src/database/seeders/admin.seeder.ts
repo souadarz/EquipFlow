@@ -10,7 +10,7 @@ export class AdminSeeder {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
-  ) {}
+  ) { }
 
   async run() {
     const existingAdmin = await this.userModel.findOne({ role: Role.ADMIN });
@@ -22,7 +22,7 @@ export class AdminSeeder {
     const hashedPassword = await bcrypt.hash('password', 10);
 
     const admin = new this.userModel({
-      name: 'Admin',
+      fullname: 'Admin',
       email: 'admin@gmail.com',
       password: hashedPassword,
       role: Role.ADMIN,
